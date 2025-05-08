@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,8 @@ public class User {
     private String name;
     private String email;
     private String password;
+
+    @CreationTimestamp
     private Date createdAt;
 
     @ManyToMany(fetch = FetchType.EAGER)
