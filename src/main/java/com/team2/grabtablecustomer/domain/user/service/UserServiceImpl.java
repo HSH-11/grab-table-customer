@@ -63,6 +63,7 @@ public class UserServiceImpl implements UserService {
 
             User savedUser = userRepository.save(user);
             userResultDto.setResult("success");
+            userResultDto.setUserDto(userDto);
 
         } catch (Exception e) {
             e.printStackTrace();

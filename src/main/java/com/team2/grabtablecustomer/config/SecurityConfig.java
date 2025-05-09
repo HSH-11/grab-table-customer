@@ -13,7 +13,9 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(
-            HttpSecurity http
+            HttpSecurity http,
+            MyAuthenticationSuccessHandler successHandler,
+            MyAuthenticationFailureHandler failureHandler
     ) throws Exception {
         return http
                 .authorizeHttpRequests(
@@ -29,6 +31,15 @@ public class SecurityConfig {
                         }
                 )
                 .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .formLogin(form
+                        -> form
+                        .loginPage("/login.html")
+                        .loginProcessingUrl("/login")
+                        .successHandler(successHandler)
+                        .failureHandler(failureHandler)
+                        .permitAll()
+                )
+                .logout(logout -> logout.permitAll())
                 .build();
     }
 

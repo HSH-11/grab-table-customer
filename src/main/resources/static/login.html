@@ -8,14 +8,14 @@
     <h1>Login</h1>
     <hr>
     <div>
-        <input type="text" id="username" name="username" required value="qwer">
+        <input type="text" id="username" name="username" required value="aa">
     </div>
     <div>
-        <input type="password" id="password" name="password" required value="1234">
+        <input type="password" id="password" name="password" required value="aa">
     </div>
 
     <!-- Add hidden input for CSRF token -->
-    <input type="hidden" name="_csrf" value="" id="csrf">
+    <input type="hidden" name="_csrf" value="" id="_csrf">
 
     <button id="btnLogin">Login</button>
 
@@ -33,14 +33,14 @@
     async function getCsrfToken(){
         let response = await fetch('/csrf-token', { method: 'GET', credentials: 'same-origin' });
         let data = await response.json();
-        document.querySelector('#csrf').value = data.token;
+        document.querySelector('#_csrf').value = data.token;
     }
 
     async function login(){
         // parameter, value
         let username = document.querySelector("#username").value;
         let password = document.querySelector("#password").value;
-        let _csrf = document.querySelector("#csrf").value;
+        let _csrf = document.querySelector("#_csrf").value;
 
         let urlParams = new URLSearchParams({
             username, password, _csrf
@@ -52,7 +52,7 @@
         // post, parameter
         let fetchOptions = {
             method: "POST",
-            body:urlParams
+            body: urlParams
         }
 
         let response = await fetch(url, fetchOptions);
@@ -61,7 +61,9 @@
         console.log(data);
 
         if (data.result == "success") {
-            window.location.href = '/';
+            alert("로그인 성공!");
+            console.log(data);
+            // window.location.href = '/';
         } else {
             document.getElementById('error-message').innerText = 'username 또는 password 가 올바르지 않습니다.';
         }
