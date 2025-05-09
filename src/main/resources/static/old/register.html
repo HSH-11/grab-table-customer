@@ -1,46 +1,34 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>회원가입</title>
-    <link rel="stylesheet" href="/css/login.css">
+    <title>register</title>
 </head>
 <body>
+    <h1>register.html</h1>
 
-<div class="wrapper">
-    <div class="container">
-        <div class="sign-in-container">
-            <div class="box">
-                <h1>고객 회원가입</h1>
-                <br/>
-                <input type="text" class="box_input" id="name" name="name" placeholder="Name" required>
-                <input type="email" class="box_input" id="email" name="email" placeholder="Email" required>
-                <input type="password" class="box_input" id="password" name="password" placeholder="Password" required>
-                <div>
-                    Membership: <br/>
-                    <input type="radio" class="box_radio" name="membership" value="BRONZE" checked> Bronze
-                    <input type="radio" class="box_radio" name="membership" value="SILVER"> Silver
-                    <input type="radio" class="box_radio" name="membership" value="GOLD"> Gold
-                </div>
-
-                <!-- Add hidden input for CSRF token -->
-                <input type="hidden" name="_csrf" value="" id="_csrf">
-
-                <button id="btnRegister" class="form_btn">Register</button>
-
-                <p id="result" style="color:red;"></p>
-            </div>
-        </div>
-
-        <div class="overlay-container">
-            <div class="overlay-right">
-                <h1>Grab Table</h1>
-                <p>이미 계정이 있으신가요?</p>
-                <button class="overlay_btn" onclick="location.href='/login'">Sign In</button>
-            </div>
-        </div>
+    <div>
+        name : <input type="text" name="name" id="name">
     </div>
-</div>
+    <div>
+        email : <input type="text" name="email" id="email">
+    </div>
+    <div>
+        password : <input type="password" name="password" id="password">
+    </div>
+    <div>
+        Membership:
+        <input type="radio" name="membership" value="BRONZE" checked> Bronze
+        <input type="radio" name="membership" value="SILVER"> Silver
+        <input type="radio" name="membership" value="GOLD"> Gold
+    </div>
+
+
+    <!-- Add hidden input for CSRF token -->
+    <!-- id 는 _ 시작 X -->
+    <input type="hidden" name="_csrf" value="" id="_csrf">
+
+    <button id="btnRegister">회원가입</button>
 
 <script>
     window.onload = function(){
@@ -55,7 +43,7 @@
         document.querySelector('#_csrf').value = data.token;
     }
 
-    async function register() {
+    async function register(){
         // parameter, value
         let name = document.querySelector("#name").value;
         let email = document.querySelector("#email").value;
@@ -85,7 +73,7 @@
         if( data.result == "success" ) {    // 회원가입 성공일 경우
             console.log(data.userDto)
             alert("회원가입 되었습니다. 로그인 페이지로 이동합니다.")
-            window.location.href="/login"
+            // window.location.href="/login"
 
         }else if( data.result == "exist" ){
             alert("이미 등록된 이메일입니다.")
@@ -93,6 +81,7 @@
         }else if( data.result == "fail" ){
             alert("회원가입 과정에서 오류가 발생했습니다.")
         }
+
     }
 </script>
 

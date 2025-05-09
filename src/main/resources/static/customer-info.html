@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>고객 정보</title>
+    <link rel="stylesheet" href="/css/customer-info.css">
+</head>
+<body>
+    <div class="profile-container">
+        <h2>내 정보</h2>
+        <table class="info-table">
+            <tr><th>이메일</th><td id="email"></td></tr>
+            <tr><th>이름</th><td id="name"></td></tr>
+            <tr><th>가입일</th><td id="createdAt"></td></tr>
+            <tr><th>등급</th><td id="memberships"></td></tr>
+        </table>
+
+        <button onclick="location.href='/'">홈으로</button>
+    </div>
+
+<script>
+    window.onload = async function () {
+        try {
+            const res = await fetch('/api/users', { credentials: 'same-origin' });
+            const data = await res.json();
+
+            if (data.result === 'success') {
+                const user = data.userDto;
+                document.getElementById('email').innerText = user.email;
+                document.getElementById('name').innerText = user.name;
+                document.getElementById('createdAt').innerText = new Date(user.createdAt).toLocaleString();
+                document.getElementById('memberships').innerText = user.memberships.map(m => m.name).join(', ');
+            } else {
+                alert('로그인이 필요합니다.');
+                location.href = '/login.html';
+            }
+        } catch (e) {
+            console.error('에러:', e);
+            alert('사용자 정보를 불러오지 못했습니다.');
+        }
+    }
+</script>
+
+</body>
+</html>

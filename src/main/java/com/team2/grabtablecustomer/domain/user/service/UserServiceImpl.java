@@ -72,4 +72,37 @@ public class UserServiceImpl implements UserService {
 
         return userResultDto;
     }
+
+    @Override
+    public UserResultDto getUserByEmail(String email) {
+        UserResultDto resultDto = new UserResultDto();
+
+        try {
+            Optional<User> optionalUser = userRepository.findByEmail(email);
+
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+
+                UserDto userDto = new UserDto();
+                userDto.setUserId(user.getUserId());
+                userDto.setName(user.getName());
+                userDto.setEmail(user.getEmail());
+                userDto.setCreatedAt(user.getCreatedAt());
+                userDto.setMemberships(user.getMemberships());
+
+                resultDto.setResult("success");
+                resultDto.setUserDto(userDto);
+
+            } else {
+                resultDto.setResult("notfound");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultDto.setResult("fail");
+        }
+
+        return resultDto;
+    }
+
 }
