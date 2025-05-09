@@ -5,11 +5,37 @@
     <title>index</title>
 </head>
 <body>
-    <h1>Grab Table 고객 서비스</h1>
+<h1>Grab Table 고객 서비스</h1>
 
-    <a href="/login">로그인</a>
-    <a href="/register">회원가입</a>
-    <a href="/board">예약하기</a>
+<a href="/login" id="loginLink">로그인</a>
+<a href="/register" id="registerLink">회원가입</a>
+<a href="/board" id="reserveLink" style="display: none;">예약하기</a>
+<form id="logoutForm" action="/logout" method="POST" style="display: none;">
+    <input type="hidden" name="_csrf" id="_csrf">
+    <button type="submit">로그아웃</button>
+</form>
 
+<script>
+    window.onload = async function () {
+        // CSRF 토큰 가져오기
+        const csrfRes = await fetch('/csrf-token');
+        const csrfData = await csrfRes.json();
+        document.querySelector('#_csrf').value = csrfData.token;
+
+        // 로그인 상태 확인
+        try {
+            const res = await fetch('/api/users', { credentials: 'same-origin' });
+            if (res.ok) {
+                // 로그인된 경우
+                document.querySelector('#loginLink').style.display = 'none';
+                document.querySelector('#registerLink').style.display = 'none';
+                document.querySelector('#reserveLink').style.display = 'inline';
+                document.querySelector('#logoutForm').style.display = 'inline';
+            }
+        } catch (err) {
+            console.error('로그인 상태 확인 실패:', err);
+        }
+    }
+</script>
 </body>
 </html>
