@@ -20,4 +20,9 @@ public class PageController {
     public String board() {
         return "/board.html";
     }
+
+    @GetMapping("/reservation")
+    public String reservation() {
+        return "/reservation.html";
+    }
 }

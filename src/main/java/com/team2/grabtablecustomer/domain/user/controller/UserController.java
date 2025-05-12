@@ -42,9 +42,8 @@ public class UserController {
 
     /** 로그인된 사용자를 세션에서 불러와서 getEmail 한 후, DB에서 해당 사용자 정보 불러오기 */
     @GetMapping
-    public ResponseEntity<UserResultDto> getLoggedInUser(Authentication authentication) {
-        CustomerUserDetails userDetails = (CustomerUserDetails) authentication.getPrincipal();
-        String email = userDetails.getEmail();
+    public ResponseEntity<UserResultDto> getLoggedInUser(@AuthenticationPrincipal CustomerUserDetails userDetails) {
+        String email = userDetails.getUsername();   // 이게 이메일 받아오는것 (user의 name이 아니라 인증할때 사용하는 email이 username에 담겨있음. UserDetails 정책)
 
         UserResultDto resultDto = userService.getUserByEmail(email);
         return ResponseEntity.ok(resultDto);
