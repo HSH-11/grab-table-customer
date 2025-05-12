@@ -33,4 +33,5 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "memberships_membership_id")
     )
     private List<Membership> memberships;
+
 }
