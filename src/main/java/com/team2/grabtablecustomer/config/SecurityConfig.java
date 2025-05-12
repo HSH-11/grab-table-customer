@@ -22,15 +22,12 @@ public class SecurityConfig {
                         .requestMatchers("/", "/index.html",
                                 "/csrf-token",
                                 "/login", "/login.html",
-                                "/register", "/register.html"
-                                "/css/**", "/js/**", "/images/**", "/fonts/**",
-                                "/api/**"   // 임시로 모든 api 접근 허용
+                                "/register", "/register.html",
+                                "/css/**", "/js/**", "/images/**", "/fonts/**"
                         ).permitAll()
-
                         .requestMatchers("/api/gold/**").hasRole("GOLD")
                         .requestMatchers("/api/silver/**").hasAnyRole("GOLD", "SILVER")
                         .requestMatchers("/api/bronze/**").hasAnyRole("GOLD", "SILVER", "BRONZE")
-
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
