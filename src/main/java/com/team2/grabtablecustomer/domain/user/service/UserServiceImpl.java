@@ -9,6 +9,7 @@ import com.team2.grabtablecustomer.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResultDto getUserByEmail(String email) {
-        UserResultDto resultDto = new UserResultDto();
+        UserResultDto userResultDto = new UserResultDto();
 
         try {
             Optional<User> optionalUser = userRepository.findByEmail(email);
@@ -90,19 +91,19 @@ public class UserServiceImpl implements UserService {
                 userDto.setCreatedAt(user.getCreatedAt());
                 userDto.setMemberships(user.getMemberships());
 
-                resultDto.setResult("success");
-                resultDto.setUserDto(userDto);
+                userResultDto.setResult("success");
+                userResultDto.setUserDto(userDto);
 
             } else {
-                resultDto.setResult("notfound");
+                userResultDto.setResult("notfound");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            resultDto.setResult("fail");
+            userResultDto.setResult("fail");
         }
 
-        return resultDto;
+        return userResultDto;
     }
 
 }

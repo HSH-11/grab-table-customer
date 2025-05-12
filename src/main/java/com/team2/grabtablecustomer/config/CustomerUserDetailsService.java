@@ -41,9 +41,8 @@ public class CustomerUserDetailsService implements UserDetailsService {
                 .toList();
 
         return CustomerUserDetails.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
                 .email(user.getEmail())
+                .password(user.getPassword())
                 .authorities(authorities)
                 .build();
     }

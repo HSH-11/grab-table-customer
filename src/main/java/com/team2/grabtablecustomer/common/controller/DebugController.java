@@ -24,7 +24,7 @@ public class DebugController {
         CustomerUserDetails userDetails = (CustomerUserDetails) authentication.getPrincipal();
 
         Map<String, Object> result = new HashMap<>();
-        result.put("email", userDetails.getEmail());
+        result.put("email", userDetails.getUsername());
         result.put("authorities", userDetails.getAuthorities());
 
         return ResponseEntity.ok(result);

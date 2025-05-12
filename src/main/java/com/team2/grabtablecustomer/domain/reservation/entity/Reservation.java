@@ -30,6 +30,10 @@ public class Reservation {
 
     private LocalDateTime visitDate; // 방문할 날짜 및 시간
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "slot_id")
+    private ReservationSlot reservationSlot;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt; // 예약 생성 시간
