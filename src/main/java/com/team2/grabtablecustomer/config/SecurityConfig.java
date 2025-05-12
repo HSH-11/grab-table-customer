@@ -18,33 +18,29 @@ public class SecurityConfig {
             MyAuthenticationFailureHandler failureHandler
     ) throws Exception {
         return http
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/", "/index.html",
-                            "/csrf-token",
-                            "/login", "/login.html",
-                            "/register", "/register.html",
-                            "/css/**", "/js/**", "/images/**", "/fonts/**",     // front-end 관련
-                            "/api/**",   // 임시로 모든 api 접근 허용
-                            "/reservation"
-                    ).permitAll()
-
-                    .requestMatchers("/api/gold/**").hasRole("GOLD")
-                    .requestMatchers("/api/silver/**").hasAnyRole("GOLD", "SILVER")
-                    .requestMatchers("/api/bronze/**").hasAnyRole("GOLD", "SILVER", "BRONZE")
-
-                    .anyRequest().authenticated()
-            )
-            // .csrf(csrf -> csrf.disable())
-            .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-            .formLogin(form -> form
-                    .loginPage("/login.html")
-                    .loginProcessingUrl("/login")
-                    .successHandler(successHandler)
-                    .failureHandler(failureHandler)
-                    .permitAll()
-            )
-            .logout(logout -> logout.permitAll())
-            .build();
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/index.html",
+                                "/csrf-token",
+                                "/login", "/login.html",
+                                "/register", "/register.html",
+                                "/css/**", "/js/**", "/images/**", "/fonts/**"
+                        ).permitAll()
+                        .requestMatchers("/api/gold/**").hasRole("GOLD")
+                        .requestMatchers("/api/silver/**").hasAnyRole("GOLD", "SILVER")
+                        .requestMatchers("/api/bronze/**").hasAnyRole("GOLD", "SILVER", "BRONZE")
+                        .anyRequest().authenticated()
+                )
+                .csrf(csrf -> csrf.disable())
+//          .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .formLogin(form -> form
+                        .loginPage("/login.html")
+                        .loginProcessingUrl("/login")
+                        .successHandler(successHandler)
+                        .failureHandler(failureHandler)
+                        .permitAll()
+                )
+                .logout(logout -> logout.permitAll())
+                .build();
     }
 
 
