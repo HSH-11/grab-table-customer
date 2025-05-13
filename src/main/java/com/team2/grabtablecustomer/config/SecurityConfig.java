@@ -30,8 +30,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/bronze/**").hasAnyRole("GOLD", "SILVER", "BRONZE")
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.disable())
-//          .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                // .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .formLogin(form -> form
                         .loginPage("/login.html")
                         .loginProcessingUrl("/login")

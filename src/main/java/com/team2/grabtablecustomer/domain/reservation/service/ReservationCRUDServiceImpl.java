@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Service
@@ -42,7 +43,7 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
                 return reservationResultDto;
             }
 
-            User user = userRepository.findById(reservationDto.getUserId())
+            User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
 
             Store store = storeRepository.findById(reservationDto.getStoreId())
@@ -51,11 +52,13 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
             ReservationSlot slot = reservationSlotRepository.findById(reservationDto.getSlotId())
                     .orElseThrow(() -> new RuntimeException("존재하지 않는 슬롯입니다."));
 
+            LocalDateTime visitDate = LocalDateTime.parse(reservationDto.getVisitDate());
+
             Reservation reservation = Reservation.builder()
                     .user(user)
                     .store(store)
                     .reservationSlot(slot)
-                    .visitDate(reservationDto.getVisitDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())  // TODO: Date, LocalDateTime 통일 필요
+                    .visitDate(visitDate)
                     .build();
 
             reservationRepository.save(reservation);
