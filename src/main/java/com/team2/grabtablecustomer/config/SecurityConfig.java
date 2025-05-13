@@ -1,5 +1,6 @@
 package com.team2.grabtablecustomer.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,7 +24,7 @@ public class SecurityConfig {
                                 "/csrf-token",
                                 "/login", "/login.html",
                                 "/register", "/register.html",
-                                "/css/**", "/js/**", "/images/**", "/fonts/**"
+                                "/css/**", "/js/**", "/images/**", "/assets/**", "/fonts/**"
                         ).permitAll()
                         .requestMatchers("/api/gold/**").hasRole("GOLD")
                         .requestMatchers("/api/silver/**").hasAnyRole("GOLD", "SILVER")
@@ -48,6 +49,10 @@ public class SecurityConfig {
                 //         .clearAuthentication(true)          // SecurityContext 비우기
                 //         .permitAll()
                 // )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        }))
                 .build();
     }
 
