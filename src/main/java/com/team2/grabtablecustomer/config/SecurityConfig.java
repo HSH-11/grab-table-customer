@@ -23,15 +23,15 @@ public class SecurityConfig {
                                 "/csrf-token",
                                 "/login", "/login.html",
                                 "/register", "/register.html",
-                                "/css/**", "/js/**", "/images/**", "/fonts/**"
+                                "/css/**", "/js/**", "/images/**", "/assets/**", "/fonts/**"
                         ).permitAll()
                         .requestMatchers("/api/gold/**").hasRole("GOLD")
                         .requestMatchers("/api/silver/**").hasAnyRole("GOLD", "SILVER")
                         .requestMatchers("/api/bronze/**").hasAnyRole("GOLD", "SILVER", "BRONZE")
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.disable())
-//          .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+//                .csrf(csrf -> csrf.disable())
+          .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .formLogin(form -> form
                         .loginPage("/login.html")
                         .loginProcessingUrl("/login")
