@@ -3,9 +3,11 @@ package com.team2.grabtablecustomer.domain.reservation.controller;
 import com.team2.grabtablecustomer.domain.reservation.dto.ReservationSlotResponseDto;
 import com.team2.grabtablecustomer.domain.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -18,10 +20,12 @@ public class GradeBasedReservationController {
     @GetMapping("/available-times")
     public ResponseEntity<List<ReservationSlotResponseDto>> getAvailableTimes(
             @PathVariable("grade") String grade,
-            @RequestParam("storeId") Long storeId) {
+            @RequestParam("storeId") Long storeId,
+            @RequestParam("visitDate") String visitDate
+    ) {
 
         // 사용자가 요청한 grade에 따른 가능한 시간대 제공
-        List<ReservationSlotResponseDto> slots = reservationService.getAvailableSlotsByGrade(storeId, grade.toUpperCase());
+        List<ReservationSlotResponseDto> slots = reservationService.getAvailableSlotsByGrade(storeId, grade.toUpperCase(), visitDate);
 
         return ResponseEntity.ok(slots);
     }

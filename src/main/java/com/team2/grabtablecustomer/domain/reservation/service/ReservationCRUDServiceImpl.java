@@ -17,9 +17,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -55,7 +57,8 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
             ReservationSlot slot = reservationSlotRepository.findById(reservationDto.getSlotId())
                     .orElseThrow(() -> new RuntimeException("존재하지 않는 슬롯입니다."));
 
-            LocalDateTime visitDate = LocalDateTime.parse(reservationDto.getVisitDate());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date visitDate = sdf.parse(reservationDto.getVisitDate());
 
             Reservation reservation = Reservation.builder()
                     .user(user)

@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -28,7 +28,8 @@ public class Reservation {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    private LocalDateTime visitDate; // 방문할 날짜 및 시간
+    @Temporal(TemporalType.DATE)    // 시간 없이 날짜만 저장
+    private Date visitDate;         // 방문할 날짜
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "slot_id")
@@ -36,5 +37,5 @@ public class Reservation {
 
     @CreationTimestamp
     @Column(updatable = false)
-    private LocalDateTime createdAt; // 예약 생성 시간
+    private Date createdAt; // 예약 생성 시간
 }
