@@ -1,41 +1,317 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>index</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Grab Table</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="assets/css/main.css" rel="stylesheet">
+
 </head>
-<body>
-<h1>Grab Table 고객 서비스</h1>
+<body class="index-page">
+    <header id="header" class="header position-relative">
+        <div class="container-fluid container-xl position-relative">
+            <div class="top-row d-flex align-items-center justify-content-between">
+                <a href="index.html" class="logo d-flex align-items-end">
+                    <h1 class="sitename">GrabTable</h1>
+                </a>
+            </div>
+        </div>
 
-<a href="/login" id="loginLink">로그인</a>
-<a href="/register" id="registerLink">회원가입</a>
-<a href="/reservation" id="reserveLink" style="display: none;">예약하기</a>
-<form id="logoutForm" action="/logout" method="POST" style="display: none;">
-    <input type="hidden" name="_csrf" id="_csrf">
-    <button type="submit">로그아웃</button>
-</form>
+        <div class="nav-wrap">
+            <div class="container d-flex justify-content-center position-relative">
+                <nav id="navmenu" class="navmenu">
+                    <ul>
+                        <li><a href="index.html" class="active">Home</a></li>
+                        <li><a href="/register" id="registerLink">Register</a></li>
+                        <li><a href="/login" id="loginLink">Login</a></li>
+                        <li><a href="/reservation" id="reservationLink" style="display: none;">Reservation</a></li>
+                        <li><a href="#" id="mypageLink" style="display: none;">MyPage</a></li>
+                        <li id="logoutLi" style="display: none;">
+                            <form id="logoutForm" action="/logout" method="POST" style="margin: 0;">
+                                <input type="hidden" name="_csrf" id="_csrf">
+                                <button type="submit" style="background: none; border: none; color: #000000; cursor: pointer;">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                    <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+                </nav>
+            </div>
+        </div>
+    </header>
 
-<script>
-    window.onload = async function () {
-        // CSRF 토큰 가져오기
-        const csrfRes = await fetch('/csrf-token');
-        const csrfData = await csrfRes.json();
-        document.querySelector('#_csrf').value = csrfData.token;
+    <main class = "main">
+        <section id="blog-hero" class="blog-hero section">
 
-        // 로그인 상태 확인
-        try {
-            const res = await fetch('/api/users', { credentials: 'same-origin' });
-            if (res.ok) {
-                // 로그인된 경우
-                document.querySelector('#loginLink').style.display = 'none';
-                document.querySelector('#registerLink').style.display = 'none';
-                document.querySelector('#reserveLink').style.display = 'inline';
-                document.querySelector('#logoutForm').style.display = 'inline';
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+                <div class="blog-grid">
+                    <article class="blog-item featured" data-aos="fade-up">
+                        <img src="assets/img/blog-post-3.webp" alt="Blog Image" class="img-fluid">
+                        <div class="blog-content">
+                            <div class="post-meta">
+                                <span class="date">Apr. 14th, 2025</span>
+                                <span class="category">Technology</span>
+                            </div>
+                            <h2 class="post-title">
+                                <a href="#" title="Lorem ipsum dolor sit amet, consectetur adipiscing elit">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                            </h2>
+                        </div>
+                    </article>
+
+                    <article class="blog-item" data-aos="fade-up" data-aos-delay="100">
+                        <img src="assets/img/blog-post-portrait-1.webp" alt="Blog Image" class="img-fluid">
+                        <div class="blog-content">
+                            <div class="post-meta">
+                                <span class="date">Apr. 14th, 2025</span>
+                                <span class="category">Security</span>
+                            </div>
+                            <h3 class="post-title">
+                                <a href="#" title="Sed do eiusmod tempor incididunt ut labore">Sed do eiusmod tempor incididunt ut labore</a>
+                            </h3>
+                        </div>
+                    </article>
+
+                    <article class="blog-item" data-aos="fade-up" data-aos-delay="200">
+                        <img src="assets/img/blog-post-9.webp" alt="Blog Image" class="img-fluid">
+                        <div class="blog-content">
+                            <div class="post-meta">
+                                <span class="date">Apr. 14th, 2025</span>
+                                <span class="category">Career</span>
+                            </div>
+                            <h3 class="post-title">
+                                <a href="#" title="Ut enim ad minim veniam, quis nostrud exercitation">Ut enim ad minim veniam, quis nostrud exercitation</a>
+                            </h3>
+                        </div>
+                    </article>
+
+                    <article class="blog-item" data-aos="fade-up" data-aos-delay="300">
+                        <img src="assets/img/blog-post-7.webp" alt="Blog Image" class="img-fluid">
+                        <div class="blog-content">
+                            <div class="post-meta">
+                                <span class="date">Apr. 14th, 2025</span>
+                                <span class="category">Cloud</span>
+                            </div>
+                            <h3 class="post-title">
+                                <a href="#" title="Adipiscing elit, sed do eiusmod tempor incididunt">Adipiscing elit, sed do eiusmod tempor incididunt</a>
+                            </h3>
+                        </div>
+                    </article>
+
+                    <article class="blog-item" data-aos="fade-up" data-aos-delay="400">
+                        <img src="assets/img/blog-post-6.webp" alt="Blog Image" class="img-fluid">
+                        <div class="blog-content">
+                            <div class="post-meta">
+                                <span class="date">Apr. 14th, 2025</span>
+                                <span class="category">Programming</span>
+                            </div>
+                            <h3 class="post-title">
+                                <a href="#" title="Excepteur sint occaecat cupidatat non proident">Excepteur sint occaecat cupidatat non proident</a>
+                            </h3>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="latest-posts" class="latest-posts section">
+
+            <div class="container section-title" data-aos="fade-up">
+                <h2>Restaurants</h2>
+                <div><span>Grab the</span> <span class="description-title">Restaurant</span></div>
+            </div>
+
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+                <div class="row gy-4">
+
+                    <div class="col-lg-4">
+                        <article>
+
+                            <div class="post-img">
+                                <img src="assets/img/blog-post-1.webp" alt="" class="img-fluid">
+                            </div>
+
+                            <p class="post-category">Politics</p>
+
+                            <h2 class="title">
+                                <a href="#">Dolorum optio tempore voluptas dignissimos</a>
+                            </h2>
+
+                            <div class="d-flex align-items-center">
+
+                            </div>
+
+                        </article>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <article>
+
+                            <div class="post-img">
+                                <img src="assets/img/blog-post-2.webp" alt="" class="img-fluid">
+                            </div>
+
+                            <p class="post-category">Sports</p>
+
+                            <h2 class="title">
+                                <a href="#">Nisi magni odit consequatur autem nulla dolorem</a>
+                            </h2>
+
+                            <div class="d-flex align-items-center">
+
+                            </div>
+
+                        </article>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <article>
+
+                            <div class="post-img">
+                                <img src="assets/img/blog-post-3.webp" alt="" class="img-fluid">
+                            </div>
+
+                            <p class="post-category">Entertainment</p>
+
+                            <h2 class="title">
+                                <a href="#">Possimus soluta ut id suscipit ea ut in quo quia et soluta</a>
+                            </h2>
+
+                            <div class="d-flex align-items-center">
+
+                            </div>
+
+                        </article>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <article>
+
+                            <div class="post-img">
+                                <img src="assets/img/blog-post-4.webp" alt="" class="img-fluid">
+                            </div>
+
+                            <p class="post-category">Sports</p>
+
+                            <h2 class="title">
+                                <a href="#">Non rem rerum nam cum quo minus olor distincti</a>
+                            </h2>
+
+                            <div class="d-flex align-items-center">
+                            </div>
+
+                        </article>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <article>
+
+                            <div class="post-img">
+                                <img src="assets/img/blog-post-5.webp" alt="" class="img-fluid">
+                            </div>
+
+                            <p class="post-category">Politics</p>
+
+                            <h2 class="title">
+                                <a href="#">Accusamus quaerat aliquam qui debitis facilis consequatur</a>
+                            </h2>
+
+
+                        </article>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <article>
+
+                            <div class="post-img">
+                                <img src="assets/img/blog-post-6.webp" alt="" class="img-fluid">
+                            </div>
+
+                            <p class="post-category">Entertainment</p>
+
+                            <h2 class="title">
+                                <a href="#">Distinctio provident quibusdam numquam aperiam aut</a>
+                            </h2>
+
+                        </article>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+    </main>
+    <footer>
+        <div class="container copyright text-center mt-4">
+            <p>© <span>Copyright</span> <strong class="px-1 sitename">Blogy</strong> <span>All Rights Reserved</span></p>
+            <div class="credits">
+                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Vendor JS Files -->
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>>
+    <script src="assets/vendor/aos/aos.js"></script>
+    <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+
+    <!-- Main JS File -->
+    <script src="assets/js/main.js"></script>
+    <script>
+        window.onload = async function () {
+            try {
+                // CSRF 토큰
+                const csrfRes = await fetch('/csrf-token', { credentials: 'same-origin' });
+                const text = await csrfRes.text();
+
+                if (text) {
+                    const csrfData = JSON.parse(text);
+                    document.querySelector('#_csrf').value = csrfData.token;
+                } else {
+                    console.warn('CSRF 응답이 비어있습니다.');
+                }
+
+                // 로그인 확인
+                const res = await fetch('/api/users', { credentials: 'same-origin' , redirect:'manual'});
+                if (res.status === 200) {
+                    // 로그인 상태일 때
+                    console.log("로그인 된 상태!");
+                    document.querySelector('#loginLink').style.display = 'none';
+                    document.querySelector('#registerLink').style.display = 'none';
+                    document.querySelector('#reservationLink').style.display = 'inline';
+                    document.querySelector('#mypageLink').style.display = 'inline';
+                    document.querySelector('#logoutLi').style.display = 'inline';
+                } else {
+                    // 비로그인 상태
+                    document.querySelector('#reservationLink').style.display = 'none';
+                    document.querySelector('#mypageLink').style.display = 'none';
+                    document.querySelector('#logoutLi').style.display = 'none';
+                }
+
+            } catch (err) {
+                console.error('초기화 중 오류 발생:', err);
             }
-        } catch (err) {
-            console.error('로그인 상태 확인 실패:', err);
-        }
-    }
-</script>
+        };
+
+    </script>
+    <script>
+        AOS.init();
+    </script>
+
 </body>
 </html>
