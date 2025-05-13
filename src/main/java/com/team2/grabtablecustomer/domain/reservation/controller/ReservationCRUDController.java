@@ -9,13 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/reservation/crud")
+@RequestMapping("/api/{grade}/reservation/crud")
 @RequiredArgsConstructor
 public class ReservationCRUDController {
 
@@ -23,11 +22,35 @@ public class ReservationCRUDController {
 
     @PostMapping
     public ResponseEntity<ReservationResultDto> insertReservation(
+            @PathVariable("grade") String grade,
             @AuthenticationPrincipal CustomerUserDetails userDetails,
-            ReservationDto reservationDto
+            @RequestBody ReservationDto reservationDto
     ) {
         String email = userDetails.getUsername();
         ReservationResultDto reservationResultDto = reservationCRUDService.insertReservation(email, reservationDto);
+
+        return ResponseEntity.ok(reservationResultDto);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<ReservationResultDto> getReservationByEmail(
+            @PathVariable("grade") String grade,
+            @AuthenticationPrincipal CustomerUserDetails userDetails
+    ) {
+        String email = userDetails.getUsername();
+        ReservationResultDto reservationResultDto = reservationCRUDService.getReservationByEmail(email);
+
+        return ResponseEntity.ok(reservationResultDto);
+    }
+
+    @DeleteMapping("/{reservationId}")
+    public ResponseEntity<ReservationResultDto> deleteReservation(
+            @PathVariable("grade") String grade,
+            @AuthenticationPrincipal CustomerUserDetails userDetails,
+            @PathVariable Long reservationId
+    ) {
+        String email = userDetails.getUsername();
+        ReservationResultDto reservationResultDto = reservationCRUDService.deleteReservation(email, reservationId);
 
         return ResponseEntity.ok(reservationResultDto);
     }

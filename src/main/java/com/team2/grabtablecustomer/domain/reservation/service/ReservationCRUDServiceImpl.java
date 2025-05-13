@@ -14,9 +14,13 @@ import com.team2.grabtablecustomer.domain.user.repository.UserRepository;
 import com.team2.grabtablecustomer.domain.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +46,7 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
                 return reservationResultDto;
             }
 
-            User user = userRepository.findById(reservationDto.getUserId())
+            User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
 
             Store store = storeRepository.findById(reservationDto.getStoreId())
@@ -51,11 +55,13 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
             ReservationSlot slot = reservationSlotRepository.findById(reservationDto.getSlotId())
                     .orElseThrow(() -> new RuntimeException("존재하지 않는 슬롯입니다."));
 
+            LocalDateTime visitDate = LocalDateTime.parse(reservationDto.getVisitDate());
+
             Reservation reservation = Reservation.builder()
                     .user(user)
                     .store(store)
                     .reservationSlot(slot)
-                    .visitDate(reservationDto.getVisitDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())  // TODO: Date, LocalDateTime 통일 필요
+                    .visitDate(visitDate)
                     .build();
 
             reservationRepository.save(reservation);
@@ -73,7 +79,42 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
 
     @Override
     public ReservationResultDto getReservationByEmail(String email) {
-        return null;
+        ReservationResultDto reservationResultDto = new ReservationResultDto();
+        UserResultDto userResultDto = userService.getUserByEmail(email);
+
+        try {
+            if (userResultDto.getUserDto() == null) {
+                reservationResultDto.setResult("User not found");
+                return reservationResultDto;
+            }
+
+            List<Reservation> reservationList = reservationRepository.findWithSlotByUserEmail(email);
+
+            if (reservationList.isEmpty()) {
+                reservationResultDto.setResult("no reservation");
+                return reservationResultDto;
+            }
+
+            List<ReservationDto> reservationDtoList = reservationList.stream()
+                    .map(res -> ReservationDto.builder()
+                            .reservationId(res.getReservationId())
+                            .storeId(res.getStore().getStoreId())
+                            .visitDate(res.getVisitDate().toString())
+                            .slotId(res.getReservationSlot().getSlotId())
+                            .slotStartTime(res.getReservationSlot().getStartTime())
+                            .build()
+                    )
+            .toList();
+
+            reservationResultDto.setResult("success");
+            reservationResultDto.setReservationDtoList(reservationDtoList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            reservationResultDto.setResult("fail");
+        }
+
+        return reservationResultDto;
     }
 
     @Override
@@ -88,7 +129,25 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
     }
 
     @Override
-    public ReservationResultDto deleteReservation(Long reservationId) {
-        return null;
+    public ReservationResultDto deleteReservation(String email, Long reservationId) {
+        ReservationResultDto reservationResultDto = new ReservationResultDto();
+
+        try {
+            Reservation reservation = reservationRepository.findWithUserById(reservationId)
+                    .orElseThrow(() -> new RuntimeException("존재하지 않는 예약입니다."));
+
+            if (!reservation.getUser().getEmail().equals(email)) {
+                throw new AccessDeniedException("예약 접근 권한 없음");
+            }
+
+            reservationRepository.delete(reservation);
+            reservationResultDto.setResult("success");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            reservationResultDto.setResult("fail");
+        }
+
+        return reservationResultDto;
     }
 }
