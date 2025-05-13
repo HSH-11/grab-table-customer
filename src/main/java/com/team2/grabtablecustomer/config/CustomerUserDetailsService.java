@@ -30,27 +30,20 @@ public class CustomerUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {   // 해당 유저가 없을때 throw
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        // Security Config에서 롤을 파악하려면 접두사 "ROLE_" 처리를 해줘야 한다.
+        List<SimpleGrantedAuthority> authorities = user.getMemberships().stream()
+                .map(m -> "ROLE_" + m.getName())
+                .map(SimpleGrantedAuthority::new)
+                .toList();
 
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            List<Membership> memberships = user.getMemberships();
-
-            List<SimpleGrantedAuthority> authorities =
-                    memberships.stream().map(Membership::getName).map(String::new).map(SimpleGrantedAuthority::new).toList();
-
-            UserDetails userDetails = CustomerUserDetails.builder()
-                    .username(user.getEmail())  // 인증을 email, password로 하니까
-                    .password(user.getPassword())
-                    .email(user.getEmail())     // 이런식으로 User 엔티티의 다양한 정보를 추가 가능
-                    .authorities(authorities)
-                    .build();
-
-            return userDetails;
-        }
-
-        throw new UsernameNotFoundException("User not found");
+        return CustomerUserDetails.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .authorities(authorities)
+                .build();
     }
 }

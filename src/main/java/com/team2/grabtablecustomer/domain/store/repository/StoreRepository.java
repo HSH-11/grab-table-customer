@@ -8,4 +8,5 @@ import java.util.List;
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
     List<Store> findByType(String type);
+
 }

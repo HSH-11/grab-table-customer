@@ -18,21 +18,21 @@ public class SecurityConfig {
             MyAuthenticationFailureHandler failureHandler
     ) throws Exception {
         return http
-                .authorizeHttpRequests(
-                        request -> {
-                            request.requestMatchers(
-                                    "/", "/index.html",
-                                    "/csrf-token",
-                                    "/login", "/login.html",
-                                    "/register", "/register.html",
-                                    "/api/**"   // 임시로 모든 api 접근 허용
-                            ).permitAll()
-                            .anyRequest().authenticated();
-                        }
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/index.html",
+                                "/csrf-token",
+                                "/login", "/login.html",
+                                "/register", "/register.html",
+                                "/css/**", "/js/**", "/images/**", "/assets/**", "/fonts/**"
+                        ).permitAll()
+                        .requestMatchers("/api/gold/**").hasRole("GOLD")
+                        .requestMatchers("/api/silver/**").hasAnyRole("GOLD", "SILVER")
+                        .requestMatchers("/api/bronze/**").hasAnyRole("GOLD", "SILVER", "BRONZE")
+                        .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-                .formLogin(form
-                        -> form
+//                .csrf(csrf -> csrf.disable())
+          .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .formLogin(form -> form
                         .loginPage("/login.html")
                         .loginProcessingUrl("/login")
                         .successHandler(successHandler)
@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .logout(logout -> logout.permitAll())
                 .build();
     }
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
