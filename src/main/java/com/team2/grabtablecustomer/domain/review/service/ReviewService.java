@@ -1,5 +1,6 @@
 package com.team2.grabtablecustomer.domain.review.service;
 
+import com.team2.grabtablecustomer.config.CustomerUserDetails;
 import com.team2.grabtablecustomer.domain.review.dto.ReviewRegisterDto;
 import com.team2.grabtablecustomer.domain.review.dto.ReviewResultDto;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,10 +16,10 @@ public interface ReviewService {
 
     ReviewResultDto findByReviewId(Long reviewId);
 
-    ReviewResultDto insertReview(UserDetails userDetails, ReviewRegisterDto registerDto) throws IOException;
+    ReviewResultDto insertReview(CustomerUserDetails userDetails, Long storeId, Long menuId, ReviewRegisterDto registerDto) throws IOException;
 
-    ReviewResultDto updateReview(UserDetails userDetails, ReviewRegisterDto registerDto) throws IOException;
+    ReviewResultDto updateReview(CustomerUserDetails userDetails, Long reviewId, ReviewRegisterDto registerDto) throws IOException;
 
-    ReviewResultDto deleteReview(UserDetails userDetails, Long reviewId);
+    ReviewResultDto deleteReview(CustomerUserDetails userDetails, Long reviewId);
 
 }
