@@ -1,18 +1,23 @@
 package com.team2.grabtablecustomer.domain.review.service;
 
+import com.team2.grabtablecustomer.config.CustomerUserDetails;
+import com.team2.grabtablecustomer.domain.menu.entity.Menu;
 import com.team2.grabtablecustomer.domain.menu.repository.MenuRepository;
 import com.team2.grabtablecustomer.domain.review.dto.ReviewDto;
 import com.team2.grabtablecustomer.domain.review.dto.ReviewRegisterDto;
 import com.team2.grabtablecustomer.domain.review.dto.ReviewResultDto;
 import com.team2.grabtablecustomer.domain.review.entity.Review;
 import com.team2.grabtablecustomer.domain.review.repository.ReviewRepository;
+import com.team2.grabtablecustomer.domain.store.entity.Store;
 import com.team2.grabtablecustomer.domain.store.repository.StoreRepository;
+import com.team2.grabtablecustomer.domain.user.entity.User;
 import com.team2.grabtablecustomer.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -164,17 +169,90 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewResultDto insertReview(UserDetails userDetails, ReviewRegisterDto registerDto) throws IOException {
-        return null;
+    public ReviewResultDto insertReview(CustomerUserDetails userDetails, Long storeId, Long menuId, ReviewRegisterDto registerDto) throws IOException {
+        ReviewResultDto reviewResultDto = new ReviewResultDto();
+
+        try {
+
+            User user = userRepository.findByEmail(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("User not found : " + userDetails.getUsername()));
+
+            Store store = storeRepository.findById(storeId)
+                    .orElseThrow(() -> new RuntimeException("Store not found : " + storeId));
+
+            Menu menu = menuRepository.findById(menuId)
+                    .orElseThrow(() -> new RuntimeException("Menu not found : " + menuId));
+
+            Review review = Review.builder()
+                    .user(user)
+                    .store(store)
+                    .menu(menu)
+                    .content(registerDto.getContent())
+                    .image(registerDto.getImageFile().getBytes())
+                    .imageContentType(registerDto.getImageFile().getContentType())
+                    .build();
+
+            reviewRepository.save(review);
+            reviewResultDto.setResult("success");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            reviewResultDto.setResult("fail");
+        }
+
+        return reviewResultDto;
     }
 
     @Override
-    public ReviewResultDto updateReview(UserDetails userDetails, ReviewRegisterDto registerDto) throws IOException {
-        return null;
+    public ReviewResultDto updateReview(CustomerUserDetails userDetails, Long reviewId, ReviewRegisterDto registerDto) throws IOException {
+        ReviewResultDto reviewResultDto = new ReviewResultDto();
+
+        try {
+            Review review = reviewRepository.findById(reviewId)
+                    .orElseThrow(() -> new RuntimeException("Review not found : " + reviewId));
+
+            if (review.getUser().getEmail().equals(userDetails.getUsername())) {
+                review.setContent(registerDto.getContent());
+                review.setImage(registerDto.getImageFile().getBytes());
+                review.setImageContentType(registerDto.getImageFile().getContentType());
+                review.setUpdatedAt(LocalDateTime.now());
+
+                reviewRepository.save(review);
+                reviewResultDto.setResult("success");
+
+            } else {
+                reviewResultDto.setResult("no permission : " + reviewId);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            reviewResultDto.setResult("fail");
+        }
+
+        return reviewResultDto;
     }
 
     @Override
-    public ReviewResultDto deleteReview(UserDetails userDetails, Long reviewId) {
-        return null;
+    public ReviewResultDto deleteReview(CustomerUserDetails userDetails, Long reviewId) {
+        ReviewResultDto reviewResultDto = new ReviewResultDto();
+
+        try {
+            Review review = reviewRepository.findById(reviewId)
+                    .orElseThrow(() -> new RuntimeException("Review not found : " + reviewId));
+
+            if (review.getUser().getEmail().equals(userDetails.getUsername())) {
+                reviewRepository.delete(review);
+                reviewResultDto.setResult("success");
+
+            } else {
+                reviewResultDto.setResult("no permission : " + reviewId);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            reviewResultDto.setResult("fail");
+        }
+
+        return reviewResultDto;
     }
 }

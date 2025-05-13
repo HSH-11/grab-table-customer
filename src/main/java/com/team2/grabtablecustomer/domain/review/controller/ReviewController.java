@@ -1,0 +1,61 @@
+package com.team2.grabtablecustomer.domain.review.controller;
+
+import com.team2.grabtablecustomer.config.CustomerUserDetails;
+import com.team2.grabtablecustomer.domain.review.dto.ReviewRegisterDto;
+import com.team2.grabtablecustomer.domain.review.dto.ReviewResultDto;
+import com.team2.grabtablecustomer.domain.review.service.ReviewService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api")
+public class ReviewController {
+    
+    private final ReviewService reviewService;
+
+    @GetMapping("/stores/{storeId}/review")
+    public ResponseEntity<ReviewResultDto> findByStoreId(@PathVariable("storeId") Long storeId) {
+        return ResponseEntity.ok(reviewService.findByStoreId(storeId));
+    }
+
+    @GetMapping("/menus/{menuId}/reviews")
+    public ResponseEntity<ReviewResultDto> findByMenuId(@PathVariable("menuId") Long menuId) {
+        return ResponseEntity.ok(reviewService.findByMenuId(menuId));
+    }
+
+    @GetMapping("/users/{userId}/reviews")
+    public ResponseEntity<ReviewResultDto> findByUserId(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(reviewService.findByUserId(userId));
+    }
+
+    @GetMapping("/reviews/{reviewId}")
+    public ResponseEntity<ReviewResultDto> findByReviewId(@PathVariable("reviewId") Long reviewId) {
+        return ResponseEntity.ok(reviewService.findByReviewId(reviewId));
+    }
+
+    @PostMapping("/stores/{storeId}/menus/{menuId}/reviews")
+    public ResponseEntity<ReviewResultDto> insertReview(
+            CustomerUserDetails userDetails,
+            @PathVariable("storeId") Long storeId,
+            @PathVariable("menuId") Long menuId,
+            @ModelAttribute ReviewRegisterDto registerDto) throws IOException {
+        return ResponseEntity.ok(reviewService.insertReview(userDetails, storeId, menuId, registerDto));
+    }
+
+    @PutMapping("/reviews/{reviewId}")
+    public ResponseEntity<ReviewResultDto> updateReview(
+            CustomerUserDetails userDetails,
+            @PathVariable("reviewId") Long reviewId,
+            @ModelAttribute ReviewRegisterDto registerDto) throws IOException {
+        return ResponseEntity.ok(reviewService.updateReview(userDetails, reviewId, registerDto));
+    }
+
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<ReviewResultDto> deleteReveiw(CustomerUserDetails userDetails, @PathVariable("reviewId") Long reviewId) {
+        return ResponseEntity.ok(reviewService.deleteReview(userDetails, reviewId));
+    }
+}
