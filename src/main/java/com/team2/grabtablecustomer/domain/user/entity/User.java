@@ -1,9 +1,7 @@
 package com.team2.grabtablecustomer.domain.user.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
@@ -14,6 +12,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +34,5 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "memberships_membership_id")
     )
     private List<Membership> memberships;
+
 }

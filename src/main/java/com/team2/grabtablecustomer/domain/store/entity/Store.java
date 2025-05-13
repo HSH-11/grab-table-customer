@@ -20,6 +20,7 @@ public class Store {
 //    @JoinColumn(name = "owner_id")
 //    private Owner owner;
 
+
     private String name;
     private String location;
     private String type;
@@ -27,7 +28,6 @@ public class Store {
     @Lob
     @Column(name = "image", columnDefinition = "BLOB")
     private byte[] image;
-
     private String imageContentType;
 
 }

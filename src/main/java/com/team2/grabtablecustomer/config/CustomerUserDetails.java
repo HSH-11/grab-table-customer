@@ -13,13 +13,11 @@ public class CustomerUserDetails implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
-    private final String username;
-    private final String password;
     private final String email;
+    private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public String getEmail() { return email; }
-    @Override public String getUsername() { return username; }
+    @Override public String getUsername() { return email; }
     @Override public String getPassword() { return password; }
     @Override public Collection<? extends GrantedAuthority> getAuthorities() { return authorities; }
 
