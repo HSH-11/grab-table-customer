@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,5 +22,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "JOIN FETCH r.user " +
             "WHERE r.reservationId = :id")
     Optional<Reservation> findWithUserById(@Param("id") Long id);
+
+    @Query(value = "SELECT slot_id FROM reservation " +
+            "WHERE store_id = :storeId " +
+            "AND DATE(visit_date) = :date", nativeQuery = true)
+    List<Long> findReservedSlotIdsByStoreAndDate(@Param("storeId") Long storeId,
+                                                 @Param("date") LocalDate date);
+
+
 
 }

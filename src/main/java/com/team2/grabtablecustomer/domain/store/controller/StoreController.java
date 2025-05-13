@@ -25,5 +25,4 @@ public class StoreController {
     public ResponseEntity<StoreResultDto> findByType(@PathVariable String searchType) {
         return ResponseEntity.status(200).body(storeService.findByType(searchType));
     }
-
 }

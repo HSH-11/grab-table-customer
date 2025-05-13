@@ -111,49 +111,100 @@
         }
 
         times
-            .sort((a, b) => a.startTime.localeCompare(b.startTime))  // startTime 기준 오름차순 정렬
-            .forEach((slot, index) => {
-
-                console.log(date);
-                console.log(slot);
-
+            .sort((a, b) => a.startTime.localeCompare(b.startTime))
+            .forEach((slot) => {
+                console.log("슬롯 정보: ", slot);
                 const btn = document.createElement("button");
-                btn.className = "btn btn-orange m-2";
+                btn.className = "btn m-2";
                 btn.textContent = slot.startTime;
 
-                btn.onclick = async () => {
-                    const visitDateTime = `${date}T${slot.startTime}`;
-                    const _csrf = document.getElementById("_csrf").value;
+                if (slot.reserved) {
+                    btn.classList.add("btn-secondary"); // 비활성화 스타일
+                    btn.disabled = true;
+                    btn.title = "이미 예약된 시간입니다.";
+                } else {
+                    btn.classList.add("btn-orange");
+                    btn.onclick = async () => {
+                        const visitDateTime = `${date}T${slot.startTime}`;
+                        const _csrf = document.getElementById("_csrf").value;
 
-                    const reservationDto = {
-                        storeId: parseInt(storeId),
-                        slotId: slot.slotId,
-                        visitDate: visitDateTime,
-                        _csrf: _csrf
+                        const reservationDto = {
+                            storeId: parseInt(storeId),
+                            slotId: slot.slotId,
+                            visitDate: visitDateTime,
+                            _csrf: _csrf
+                        };
+
+                        const url = `/api/${userLevel.toLowerCase()}/reservation/crud`;
+
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-XSRF-TOKEN": _csrf
+                            },
+                            body: JSON.stringify(reservationDto),
+                            credentials: "include"
+                        });
+
+                        const result = await response.json();
+                        if (result.result === "success") {
+                            alert("예약 성공!");
+                        } else {
+                            alert("예약 실패: " + result.result);
+                        }
                     };
-
-                    const url = `/api/${userLevel.toLowerCase()}/reservation/crud`;
-
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-XSRF-TOKEN": _csrf
-                        },
-                        body: JSON.stringify({ ...reservationDto, _csrf }),
-                        credentials: "include"
-                    });
-
-                    const result = await response.json();
-                    if (result.result === "success") {
-                        alert("예약 성공!");
-                    } else {
-                        alert("예약 실패: " + result.result);
-                    }
-                };
+                }
 
                 container.appendChild(btn);
             });
+
+
+
+        // times
+        //     .sort((a, b) => a.startTime.localeCompare(b.startTime))  // startTime 기준 오름차순 정렬
+        //     .forEach((slot, index) => {
+        //
+        //         console.log(date);
+        //         console.log(slot);
+        //
+        //         const btn = document.createElement("button");
+        //         btn.className = "btn btn-orange m-2";
+        //         btn.textContent = slot.startTime;
+        //
+        //         btn.onclick = async () => {
+        //             const visitDateTime = `${date}T${slot.startTime}`;
+        //             const _csrf = document.getElementById("_csrf").value;
+        //
+        //             const reservationDto = {
+        //                 storeId: parseInt(storeId),
+        //                 slotId: slot.slotId,
+        //                 visitDate: visitDateTime,
+        //                 _csrf: _csrf
+        //             };
+        //
+        //             const url = `/api/${userLevel.toLowerCase()}/reservation/crud`;
+        //
+        //             const response = await fetch(url, {
+        //                 method: "POST",
+        //                 headers: {
+        //                     "Content-Type": "application/json",
+        //                     "X-XSRF-TOKEN": _csrf
+        //                 },
+        //                 body: JSON.stringify({ ...reservationDto, _csrf }),
+        //                 credentials: "include"
+        //             });
+        //
+        //             const result = await response.json();
+        //             if (result.result === "success") {
+        //                 alert("예약 성공!");
+        //             } else {
+        //                 alert("예약 실패: " + result.result);
+        //             }
+        //         };
+        //
+        //         container.appendChild(btn);
+        //     });
     }
 </script>
 </body>

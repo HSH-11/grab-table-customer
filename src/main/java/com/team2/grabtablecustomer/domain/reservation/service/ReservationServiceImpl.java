@@ -1,10 +1,12 @@
 package com.team2.grabtablecustomer.domain.reservation.service;
 
 import com.team2.grabtablecustomer.domain.reservation.dto.ReservationSlotResponseDto;
+import com.team2.grabtablecustomer.domain.reservation.repository.ReservationRepository;
 import com.team2.grabtablecustomer.domain.reservation.repository.ReservationSlotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,13 +15,16 @@ import java.util.stream.Collectors;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationSlotRepository slotRepository;
+    private final ReservationRepository reservationRepository;
 
     private static final List<String> LEVEL_PRIORITY = List.of("BRONZE", "SILVER", "GOLD");
 
     // 자신의 등급 이하도 예약 가능하게 끔 보여줘야함
     @Override
-    public List<ReservationSlotResponseDto> getAvailableSlotsByGrade(Long storeId, String grade) {
+    public List<ReservationSlotResponseDto> getAvailableSlotsByGrade(Long storeId, String grade, LocalDate date) {
         List<String> LEVEL_PRIORITY = List.of("BRONZE", "SILVER", "GOLD");
+
+        List<Long> reservedSlotIds = reservationRepository.findReservedSlotIdsByStoreAndDate(storeId, date);
 
         return slotRepository.findByStore_StoreId(storeId).stream()
                 .filter(slot -> {
@@ -31,14 +36,9 @@ public class ReservationServiceImpl implements ReservationService {
                         .storeId(slot.getStore().getStoreId())
                         .startTime(slot.getStartTime())
                         .endTime(slot.getEndTime())
+                        .reserved(reservedSlotIds.contains(slot.getSlotId()))
                         .build())
                 .collect(Collectors.toList());
     }
-
-
-
-
-
-
 
 }
