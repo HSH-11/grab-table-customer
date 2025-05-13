@@ -40,6 +40,14 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(logout -> logout.permitAll())
+                // .logout(logout -> logout
+                //         .logoutUrl("/logout")
+                //         .logoutSuccessUrl("/index.html")    // 로그아웃 후 리다이렉트
+                //         .deleteCookies("JSESSIONID")        // 세션 쿠키 삭제
+                //         .invalidateHttpSession(true)        // 세션 무효화
+                //         .clearAuthentication(true)          // SecurityContext 비우기
+                //         .permitAll()
+                // )
                 .build();
     }
 

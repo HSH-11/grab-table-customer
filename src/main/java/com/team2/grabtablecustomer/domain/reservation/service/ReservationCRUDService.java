@@ -11,5 +11,5 @@ public interface ReservationCRUDService {
     ReservationResultDto getReservationByEmailAndStoreId(String email, Long storeId);
 
     ReservationResultDto updateReservation(ReservationDto reservationDto);
-    ReservationResultDto deleteReservation(Long reservationId);
+    ReservationResultDto deleteReservation(String email, Long reservationId);
 }
