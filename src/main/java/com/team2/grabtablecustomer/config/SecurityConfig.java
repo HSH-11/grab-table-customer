@@ -24,7 +24,8 @@ public class SecurityConfig {
                                 "/csrf-token",
                                 "/login", "/login.html",
                                 "/register", "/register.html",
-                                "/css/**", "/js/**", "/images/**", "/assets/**", "/fonts/**"
+                                "/css/**", "/js/**", "/images/**", "/assets/**", "/fonts/**",
+                                "/debug/**"     // 디버깅, 테스팅용 임시 오픈
                         ).permitAll()
                         .requestMatchers("/api/gold/**").hasRole("GOLD")
                         .requestMatchers("/api/silver/**").hasAnyRole("GOLD", "SILVER")
