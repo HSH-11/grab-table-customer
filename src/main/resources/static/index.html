@@ -287,7 +287,8 @@
                 }
 
                 // 로그인 확인
-                const res = await fetch('/api/users', { credentials: 'same-origin' , redirect:'manual'});
+                const res = await fetch('/api/users', { credentials: 'same-origin'});
+                console.log(res.status);
                 if (res.status === 200) {
                     // 로그인 상태일 때
                     console.log("로그인 된 상태!");
@@ -296,7 +297,7 @@
                     document.querySelector('#reservationLink').style.display = 'inline';
                     document.querySelector('#mypageLink').style.display = 'inline';
                     document.querySelector('#logoutLi').style.display = 'inline';
-                } else {
+                } else if (res.status === 401) {
                     // 비로그인 상태
                     document.querySelector('#reservationLink').style.display = 'none';
                     document.querySelector('#mypageLink').style.display = 'none';

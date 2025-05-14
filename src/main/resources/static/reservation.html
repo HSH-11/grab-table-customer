@@ -23,6 +23,8 @@
 <div class="container">
     <h2 class="mb-4 text-center">🕒 예약 가능 시간대</h2>
 
+    <input type="hidden" id="_csrf" name="_csrf" value="">
+
     <div class="row mb-3">
         <div class="col-md-6">
             <label for="datePicker" class="form-label">날짜 선택</label>
@@ -42,6 +44,18 @@
 <script>
     let userLevel = 'BRONZE';
 
+    window.onload = function () {
+        getCsrfToken();
+        document.getElementById("loadBtn").addEventListener("click", loadReservationSlots);
+    };
+
+    async function getCsrfToken() {
+        const response = await fetch('/csrf-token', { credentials: 'include' });
+        const data = await response.json();
+        document.getElementById('_csrf').value = data.token;
+    }
+
+
     async function fetchUserLevel() {
         const res = await fetch('/api/users/info', { credentials: 'include' });
         if (res.ok) {
@@ -51,13 +65,40 @@
         }
     }
 
-    document.getElementById("loadBtn").addEventListener("click", async () => {
+    // document.getElementById("loadBtn").addEventListener("click", async () => {
+    //     const date = document.getElementById("datePicker").value;
+    //     const storeId = document.getElementById("storeId").value;
+    //
+    //     await fetchUserLevel();
+    //     const url = `/api/${userLevel.toLowerCase()}/reservations/available-times?storeId=${storeId}&date=${date}`;
+    //
+    //     const res = await fetch(url, { credentials: 'include' });
+    //     const times = await res.json();
+    //
+    //     const container = document.getElementById("timeSlots");
+    //     container.innerHTML = "";
+    //
+    //     if (times.length === 0) {
+    //         container.innerHTML = "<p class='text-muted'>예약 가능한 시간이 없습니다.</p>";
+    //         return;
+    //     }
+    //
+    //     times.forEach(time => {
+    //         const btn = document.createElement("button");
+    //         btn.className = "btn btn-orange time-slot";
+    //         btn.textContent = time;
+    //         btn.onclick = () => alert(`${time} 예약 선택됨`);
+    //         container.appendChild(btn);
+    //     });
+    // });
+
+    async function loadReservationSlots() {
         const date = document.getElementById("datePicker").value;
         const storeId = document.getElementById("storeId").value;
 
         await fetchUserLevel();
-        const url = `/api/${userLevel.toLowerCase()}/reservations/available-times?storeId=${storeId}&date=${date}`;
 
+        const url = `/api/${userLevel.toLowerCase()}/reservations/available-times?storeId=${storeId}&date=${date}`;
         const res = await fetch(url, { credentials: 'include' });
         const times = await res.json();
 
@@ -69,14 +110,51 @@
             return;
         }
 
-        times.forEach(time => {
-            const btn = document.createElement("button");
-            btn.className = "btn btn-orange time-slot";
-            btn.textContent = time;
-            btn.onclick = () => alert(`${time} 예약 선택됨`);
-            container.appendChild(btn);
-        });
-    });
+        times
+            .sort((a, b) => a.startTime.localeCompare(b.startTime))  // startTime 기준 오름차순 정렬
+            .forEach((slot, index) => {
+
+                console.log(date);
+                console.log(slot);
+
+                const btn = document.createElement("button");
+                btn.className = "btn btn-orange m-2";
+                btn.textContent = slot.startTime;
+
+                btn.onclick = async () => {
+                    const visitDateTime = `${date}T${slot.startTime}`;
+                    const _csrf = document.getElementById("_csrf").value;
+
+                    const reservationDto = {
+                        storeId: parseInt(storeId),
+                        slotId: slot.slotId,
+                        visitDate: visitDateTime,
+                        _csrf: _csrf
+                    };
+
+                    const url = `/api/${userLevel.toLowerCase()}/reservation/crud`;
+
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-XSRF-TOKEN": _csrf
+                        },
+                        body: JSON.stringify({ ...reservationDto, _csrf }),
+                        credentials: "include"
+                    });
+
+                    const result = await response.json();
+                    if (result.result === "success") {
+                        alert("예약 성공!");
+                    } else {
+                        alert("예약 실패: " + result.result);
+                    }
+                };
+
+                container.appendChild(btn);
+            });
+    }
 </script>
 </body>
 </html>

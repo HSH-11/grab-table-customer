@@ -1,5 +1,6 @@
 package com.team2.grabtablecustomer.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,8 +31,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/bronze/**").hasAnyRole("GOLD", "SILVER", "BRONZE")
                         .anyRequest().authenticated()
                 )
-//                .csrf(csrf -> csrf.disable())
-          .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                // .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .formLogin(form -> form
                         .loginPage("/login.html")
                         .loginProcessingUrl("/login")
@@ -40,6 +41,18 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(logout -> logout.permitAll())
+                // .logout(logout -> logout
+                //         .logoutUrl("/logout")
+                //         .logoutSuccessUrl("/index.html")    // 로그아웃 후 리다이렉트
+                //         .deleteCookies("JSESSIONID")        // 세션 쿠키 삭제
+                //         .invalidateHttpSession(true)        // 세션 무효화
+                //         .clearAuthentication(true)          // SecurityContext 비우기
+                //         .permitAll()
+                // )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        }))
                 .build();
     }
 
