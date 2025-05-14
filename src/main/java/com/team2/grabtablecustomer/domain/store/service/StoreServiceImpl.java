@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -78,5 +80,21 @@ public class StoreServiceImpl implements StoreService {
         }
 
         return storeResultDto;
+    }
+    @Override
+    public StoreDto findByStoreId(Long storeId) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new NoSuchElementException("No Store found with id: " + storeId));
+
+        return StoreDto.builder()
+                .storeId(store.getStoreId())
+                .name(store.getName())
+                .location(store.getLocation())
+                .type(store.getType())
+                .image(store.getImage())
+                .imageContentType(store.getImageContentType())
+                .ownerId(store.getOwner() != null ? store.getOwner().getOwnerId() : null)
+                .build();
+
     }
 }

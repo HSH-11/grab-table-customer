@@ -1,5 +1,6 @@
 package com.team2.grabtablecustomer.domain.store.entity;
 
+import com.team2.grabtablecustomer.domain.owner.entity.Owner;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,9 +17,9 @@ public class Store {
     @Id
     private Long storeId;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "owner_id")
-//    private Owner owner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private Owner owner;
 
 
     private String name;

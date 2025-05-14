@@ -80,6 +80,7 @@ public class ReviewServiceImpl implements ReviewService {
                 ReviewDto reviewDto = ReviewDto.builder()
                         .reviewId(review.getReviewId())
                         .userId(review.getUser().getUserId())
+                        .userName(review.getUser().getName())
                         .storeId(review.getStore().getStoreId())
                         .menuId(review.getMenu().getMenuId())
                         .content(review.getContent())
