@@ -25,4 +25,13 @@ public class PageController {
     public String reservation() {
         return "/reservation.html";
     }
+
+    @GetMapping("/store-detail")
+    public String storeDetail() {
+        return "/store-detail.html";
+    }
+    @GetMapping("/category")
+    public String category() {
+        return "/category.html";
+    }
 }
