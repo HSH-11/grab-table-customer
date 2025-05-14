@@ -41,6 +41,8 @@ public class ReservationServiceImpl implements ReservationService {
                 })
                 .map(slot -> {
                     boolean isReserved = reservationRepository.existsByStore_StoreIdAndVisitDateAndReservationSlot_SlotId(slot.getStore().getStoreId(), parsedDate, slot.getSlotId());
+                    System.out.println(visitDate);
+                    System.out.println(parsedDate);
                     System.out.println(slot.getStore().getStoreId() + " " + parsedDate + " " +  slot.getSlotId());
 
                     return ReservationSlotResponseDto.builder()

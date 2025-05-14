@@ -113,12 +113,6 @@
         times
             .sort((a, b) => a.startTime.localeCompare(b.startTime))  // startTime 기준 오름차순 정렬
             .forEach((slot, index) => {
-                /**
-                 *  1. slot.visitDate & slot.slotStartTime 으로 reservation 에서 조회하는 api 한번더 요청
-                 *  2. 만약 있다 -> 예약 불가 (btn.className = "회색", 클릭 불가능하게)
-                 *         없다 -> 예약 가능 (기존 코드 사용)
-                 */
-
                 console.log(visitDate);
                 console.log(slot);
 
@@ -158,7 +152,7 @@
                         }
                     };
                 } else {
-                    btn.className = "btn btn-gray m-2";
+                    btn.className = "btn btn-secondary m-2";
                     btn.textContent = slot.startTime;
                 }
 
