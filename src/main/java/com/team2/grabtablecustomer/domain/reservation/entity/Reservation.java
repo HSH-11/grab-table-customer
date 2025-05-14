@@ -38,4 +38,6 @@ public class Reservation {
     @CreationTimestamp
     @Column(updatable = false)
     private Date createdAt; // 예약 생성 시간
+
+    private String status;  // 방문전 = before, 방문후(사장님체크) = after
 }

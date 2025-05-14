@@ -106,9 +106,10 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
                             .visitDate(res.getVisitDate().toString())
                             .slotId(res.getReservationSlot().getSlotId())
                             .slotStartTime(res.getReservationSlot().getStartTime())
+                            .status(res.getStatus())
                             .build()
                     )
-            .toList();
+                    .toList();
 
             reservationResultDto.setResult("success");
             reservationResultDto.setReservationDtoList(reservationDtoList);
