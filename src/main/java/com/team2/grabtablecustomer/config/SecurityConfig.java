@@ -26,8 +26,10 @@ public class SecurityConfig {
                                 "/category","/category.html",
                                 "/store-detail","/store-detail.html",
                                 "/register", "/register.html",
+                                "/css/**", "/js/**", "/images/**", "/assets/**", "/fonts/**",
+                                "/debug/**",     // 디버깅, 테스팅용 임시 오픈
                                 "/api/menus/**",
-                                "/css/**", "/js/**", "/images/**", "/assets/**", "/fonts/**","/api/stores/**"
+                                "/api/stores/**"
                         ).permitAll()
                         .requestMatchers("/api/gold/**").hasRole("GOLD")
                         .requestMatchers("/api/silver/**").hasAnyRole("GOLD", "SILVER")

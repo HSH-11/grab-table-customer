@@ -17,10 +17,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +58,8 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
             ReservationSlot slot = reservationSlotRepository.findById(reservationDto.getSlotId())
                     .orElseThrow(() -> new RuntimeException("존재하지 않는 슬롯입니다."));
 
-            LocalDateTime visitDate = LocalDateTime.parse(reservationDto.getVisitDate());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date visitDate = sdf.parse(reservationDto.getVisitDate());
 
             Reservation reservation = Reservation.builder()
                     .user(user)
@@ -102,9 +106,10 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
                             .visitDate(res.getVisitDate().toString())
                             .slotId(res.getReservationSlot().getSlotId())
                             .slotStartTime(res.getReservationSlot().getStartTime())
+                            .status(res.getStatus())
                             .build()
                     )
-            .toList();
+                    .toList();
 
             reservationResultDto.setResult("success");
             reservationResultDto.setReservationDtoList(reservationDtoList);
@@ -149,5 +154,18 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
         }
 
         return reservationResultDto;
+    }
+
+    @Override
+    public void testRepo() {
+        Optional<Reservation> res = reservationRepository.findById(1L);
+        if (res.isPresent()) {
+            System.out.println(res);
+            System.out.println(res.get().getReservationId());
+            System.out.println(res.get().getStore().getStoreId());
+            System.out.println(res.get().getVisitDate());
+        } else {
+            System.out.println("not present");
+        }
     }
 }
