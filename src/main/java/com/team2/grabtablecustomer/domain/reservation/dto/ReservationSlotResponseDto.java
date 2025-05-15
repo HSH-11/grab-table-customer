@@ -13,5 +13,6 @@ public class ReservationSlotResponseDto {
     private Long storeId;
     private String startTime;
     private String endTime;
+    private boolean reserved;
     private MembershipLevel allowedMembership;
 }
