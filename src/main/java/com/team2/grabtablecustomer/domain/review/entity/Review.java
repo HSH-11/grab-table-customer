@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Data
@@ -40,10 +41,10 @@ public class Review {
     String content;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @CreationTimestamp
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 
     @Lob
     @Column(name = "image", columnDefinition = "BLOB")
