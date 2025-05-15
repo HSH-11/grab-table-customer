@@ -30,6 +30,7 @@ public class SecurityConfig {
                                 "/debug/**",     // 디버깅, 테스팅용 임시 오픈
                                 "/api/menus/**",
                                 "/api/stores/**",
+                                "/api/users/register",
                                 "/api/reviews/menus/**"
                         ).permitAll()
                         .requestMatchers("/api/gold/**").hasRole("GOLD")

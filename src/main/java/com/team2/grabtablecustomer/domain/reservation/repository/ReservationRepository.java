@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +15,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("SELECT r FROM Reservation r " +
             "JOIN FETCH r.reservationSlot " +
+            "JOIN FETCH r.store " +
             "WHERE r.user.email = :email")
-    List<Reservation> findWithSlotByUserEmail(@Param("email") String email);
+    List<Reservation> findWithSlotAndStoreByUserEmail(@Param("email") String email);
 
     @Query("SELECT r FROM Reservation r " +
             "JOIN FETCH r.user " +
