@@ -20,4 +20,6 @@ public class ReservationDto {
 
     private Date createdAt;
 
+    private String status;
+
 }

@@ -31,29 +31,27 @@
                 <h1 class="sitename">GrabTable</h1>
             </a>
         </div>
-    </div>
-
-    <div class="nav-wrap">
-        <div class="container d-flex justify-content-center position-relative">
-            <nav id="navmenu" class="navmenu">
-                <ul>
-                    <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="/register" id="registerLink">Register</a></li>
-                    <li><a href="/login" id="loginLink">Login</a></li>
-                    <li><a href="/reservation" id="reservationLink" style="display: none;">Reservation</a></li>
-                    <li><a href="#" id="mypageLink" style="display: none;">MyPage</a></li>
-                    <li id="logoutLi" style="display: none;">
-                        <form id="logoutForm" action="/logout" method="POST" style="margin: 0;">
-                            <input type="hidden" name="_csrf" id="_csrf">
-                            <button type="submit"
-                                    style="background: none; border: none; color: #000000; cursor: pointer;">
-                                Logout
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-            </nav>
+        <div class="nav-wrap">
+            <div class="container d-flex justify-content-center position-relative">
+                <nav id="navmenu" class="navmenu">
+                    <ul>
+                        <li><a href="/index" class="active">Home</a></li>
+                        <li><a href="/register" id="registerLink">Register</a></li>
+                        <li><a href="/login" id="loginLink">Login</a></li>
+                        <li><a href="/reservation" id="reservationLink" style="display: none;">Reservation</a></li>
+                        <li><a href="/mypage" id="mypageLink" style="display: none;">MyPage</a></li>
+                        <li id="logoutLi" style="display: none;">
+                            <form id="logoutForm" action="/logout" method="POST" style="margin: 0;">
+                                <input type="hidden" name="_csrf" id="_csrf">
+                                <button type="submit" style="background: none; border: none; color: #000000; cursor: pointer;">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                    <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+                </nav>
+            </div>
         </div>
     </div>
 </header>

@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Builder
@@ -17,8 +18,8 @@ public class ReviewDto {
     // todo : 예약 연결
 //    private Long reservationId;
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
 
     private byte[] image;
     private String imageContentType;

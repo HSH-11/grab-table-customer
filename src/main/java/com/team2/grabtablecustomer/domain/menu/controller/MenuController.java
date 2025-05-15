@@ -17,17 +17,17 @@ public class MenuController {
 
     private final MenuService menuService;
 
-    @GetMapping("/stores/{storeId}/menus")
+    @GetMapping("/stores/{storeId}")
     public ResponseEntity<MenuResultDto> findByStoreId(@PathVariable("storeId") Long storeId) {
         return ResponseEntity.status(200).body(menuService.findByStoreId(storeId));
     }
 
-    @GetMapping("/menus/{menuId}")
+    @GetMapping("/{menuId}")
     public ResponseEntity<MenuResultDto> findByMenuId(@PathVariable Long menuId) {
         return ResponseEntity.status(200).body(menuService.findByMenuId(menuId));
     }
 
-    @GetMapping("/menus/{menuId}/image")
+    @GetMapping("/{menuId}/image")
     public ResponseEntity<MenuImageDto> getMenuImage(@PathVariable Long menuId) {
         return ResponseEntity.ok(menuService.getMenuImage(menuId));
     }
