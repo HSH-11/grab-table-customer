@@ -14,32 +14,32 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/reviews")
 public class ReviewController {
     
     private final ReviewService reviewService;
 
-    @GetMapping("/stores/{storeId}/reviews")
+    @GetMapping("/stores/{storeId}")
     public ResponseEntity<ReviewResultDto> findByStoreId(@PathVariable("storeId") Long storeId) {
         return ResponseEntity.ok(reviewService.findByStoreId(storeId));
     }
 
-    @GetMapping("/menus/{menuId}/reviews")
+    @GetMapping("/menus/{menuId}")
     public ResponseEntity<ReviewResultDto> findByMenuId(@PathVariable("menuId") Long menuId) {
         return ResponseEntity.ok(reviewService.findByMenuId(menuId));
     }
 
-    @GetMapping("/users/{userId}/reviews")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<ReviewResultDto> findByUserId(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(reviewService.findByUserId(userId));
     }
 
-    @GetMapping("/reviews/{reviewId}")
+    @GetMapping("/{reviewId}")
     public ResponseEntity<ReviewResultDto> findByReviewId(@PathVariable("reviewId") Long reviewId) {
         return ResponseEntity.ok(reviewService.findByReviewId(reviewId));
     }
 
-    @PostMapping("/stores/{storeId}/menus/{menuId}/reviews")
+    @PostMapping("/stores/{storeId}/menus/{menuId}")
     public ResponseEntity<ReviewResultDto> insertReview(
             @AuthenticationPrincipal CustomerUserDetails userDetails,
             @PathVariable("storeId") Long storeId,
@@ -48,7 +48,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.insertReview(userDetails, storeId, menuId, registerDto));
     }
 
-    @PutMapping("/reviews/{reviewId}")
+    @PutMapping("/{reviewId}")
     public ResponseEntity<ReviewResultDto> updateReview(
             @AuthenticationPrincipal CustomerUserDetails userDetails,
             @PathVariable("reviewId") Long reviewId,
@@ -56,8 +56,8 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.updateReview(userDetails, reviewId, registerDto));
     }
 
-    @DeleteMapping("/reviews/{reviewId}")
-    public ResponseEntity<ReviewResultDto> deleteReveiw(@AuthenticationPrincipal CustomerUserDetails userDetails, @PathVariable("reviewId") Long reviewId) {
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<ReviewResultDto> deleteReview(@AuthenticationPrincipal CustomerUserDetails userDetails, @PathVariable("reviewId") Long reviewId) {
         return ResponseEntity.ok(reviewService.deleteReview(userDetails, reviewId));
     }
 }

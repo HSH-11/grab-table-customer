@@ -29,7 +29,8 @@ public class SecurityConfig {
                                 "/css/**", "/js/**", "/images/**", "/assets/**", "/fonts/**",
                                 "/debug/**",     // 디버깅, 테스팅용 임시 오픈
                                 "/api/menus/**",
-                                "/api/stores/**"
+                                "/api/stores/**",
+                                "/api/reviews/menus/**"
                         ).permitAll()
                         .requestMatchers("/api/gold/**").hasRole("GOLD")
                         .requestMatchers("/api/silver/**").hasAnyRole("GOLD", "SILVER")

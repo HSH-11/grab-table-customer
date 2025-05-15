@@ -137,7 +137,7 @@
   async function openReviewModal(menuId, menuName) {
     document.getElementById("reviewModalLabel").textContent = `📝 ${menuName} - 리뷰`;
 
-    const res = await fetch(`/api/menus/${menuId}/reviews`);
+    const res = await fetch(`/api/reviews/menus/${menuId}`);
     const data = await res.json();
     const reviews = data.reviewDtoList || [];
 
@@ -222,7 +222,7 @@
   }
 
   async function loadMenus(storeId) {
-    const res = await fetch(`/api/menus/stores/${storeId}/menus`);
+    const res = await fetch(`/api/menus/stores/${storeId}`);
     const data = await res.json();
     const menuList = data.menuDtoList || [];
 

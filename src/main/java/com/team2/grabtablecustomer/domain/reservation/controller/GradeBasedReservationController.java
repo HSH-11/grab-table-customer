@@ -26,7 +26,7 @@ public class GradeBasedReservationController {
     ) {
 
         // 사용자가 요청한 grade에 따른 가능한 시간대 제공
-        List<ReservationSlotResponseDto> slots = reservationService.getAvailableSlotsByGrade(storeId, grade.toUpperCase(),date);
+        List<ReservationSlotResponseDto> slots = reservationService.getAvailableSlotsByGrade(storeId, grade.toUpperCase(), visitDate);
 
         return ResponseEntity.ok(slots);
     }
