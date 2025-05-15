@@ -1,5 +1,6 @@
 package com.team2.grabtablecustomer.domain.store.controller;
 
+import com.team2.grabtablecustomer.domain.store.dto.StoreDto;
 import com.team2.grabtablecustomer.domain.store.dto.StoreResultDto;
 import com.team2.grabtablecustomer.domain.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
@@ -26,4 +27,9 @@ public class StoreController {
         return ResponseEntity.status(200).body(storeService.findByType(searchType));
     }
 
+    @GetMapping("/detail/{storeId}")
+    public ResponseEntity<StoreDto> findByStoreId(@PathVariable Long storeId) {
+        StoreDto dto = storeService.findByStoreId(storeId);
+        return ResponseEntity.ok(dto);
+    }
 }

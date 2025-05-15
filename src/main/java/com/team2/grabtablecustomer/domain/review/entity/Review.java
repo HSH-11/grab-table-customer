@@ -1,6 +1,7 @@
 package com.team2.grabtablecustomer.domain.review.entity;
 
 import com.team2.grabtablecustomer.domain.menu.entity.Menu;
+import com.team2.grabtablecustomer.domain.reservation.entity.Reservation;
 import com.team2.grabtablecustomer.domain.store.entity.Store;
 import com.team2.grabtablecustomer.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -34,9 +35,8 @@ public class Review {
     @JoinColumn(name = "menu_id")
     Menu menu;
 
-    // todo : 예약 연결
-//    @OneToOne
-//    Reservation reservation;
+    @OneToOne
+    Reservation reservation;
 
     String content;
 

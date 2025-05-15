@@ -12,6 +12,7 @@ public class ReviewDto {
     private Long reviewId;
     // todo : 유저이름, 가게이름, 메뉴이름 으로??
     private Long userId;
+    private String userName;
     private Long storeId;
     private Long menuId;
     // todo : 예약 연결
@@ -19,7 +20,6 @@ public class ReviewDto {
     private String content;
     private Date createdAt;
     private Date updatedAt;
-
 
     private byte[] image;
     private String imageContentType;

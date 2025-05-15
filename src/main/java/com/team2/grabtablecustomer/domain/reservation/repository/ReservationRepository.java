@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,5 +24,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "JOIN FETCH r.user " +
             "WHERE r.reservationId = :id")
     Optional<Reservation> findWithUserById(@Param("id") Long id);
+
+    boolean existsByStore_StoreIdAndVisitDateAndReservationSlot_SlotId(Long storeId, Date visitDate, Long slotId);
 
 }
