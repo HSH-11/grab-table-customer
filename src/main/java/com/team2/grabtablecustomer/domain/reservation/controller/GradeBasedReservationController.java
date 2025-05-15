@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,7 +22,8 @@ public class GradeBasedReservationController {
     public ResponseEntity<List<ReservationSlotResponseDto>> getAvailableTimes(
             @PathVariable("grade") String grade,
             @RequestParam("storeId") Long storeId,
-            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate date) {
+            @RequestParam("visitDate") String visitDate
+    ) {
 
         // 사용자가 요청한 grade에 따른 가능한 시간대 제공
         List<ReservationSlotResponseDto> slots = reservationService.getAvailableSlotsByGrade(storeId, grade.toUpperCase(),date);

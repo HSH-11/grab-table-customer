@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>My Page</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Poppins&family=Nunito&display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap CSS (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet" />
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet" />
+    <link href="assets/css/main.css" rel="stylesheet" />
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body class="index-page">
+<header id="header" class="header position-relative">
+    <div class="container-fluid container-xl position-relative">
+        <div class="top-row d-flex align-items-center justify-content-between">
+            <a href="index.html" class="logo d-flex align-items-end">
+                <h1 class="sitename">GrabTable</h1>
+            </a>
+        </div>
+    </div>
+
+    <div class="nav-wrap">
+        <div class="container d-flex justify-content-center position-relative">
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="/index">Home</a></li>
+                    <li><a href="/register" id="registerLink">Register</a></li>
+                    <li><a href="/login" id="loginLink">Login</a></li>
+                    <li><a href="/reservation" id="reservationLink" style="display: none;">Reservation</a></li>
+                    <li><a href="/mypage" id="mypageLink" class="active" style="display: none;">MyPage</a></li>
+                    <li id="logoutLi" style="display: none;">
+                        <form id="logoutForm" action="/logout" method="POST" style="margin: 0;">
+<!--                            <input type="hidden" name="_csrf" id="_csrf" />-->
+                            <button type="submit" style="background: none; border: none; color: #000; cursor: pointer;">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+        </div>
+    </div>
+</header>
+<main class="main">
+    <!-- 사용자 정보 -->
+    <section class="section py-3">
+        <div class="container text-center">
+            <h2 id="username">사용자 이름</h2>
+            <button onclick="location.href='/customer-info'" class="btn btn-outline-primary mt-2">내 정보 보기</button>
+        </div>
+    </section>
+
+    <!-- 예약 내역 -->
+    <section class="section py-3 mt-3">
+        <div class="container">
+            <h3>📅 내 예약 내역</h3>
+            <table class="table table-bordered mt-3">
+                <thead>
+                <tr>
+                    <th>가게 ID</th>
+                    <th>방문 날짜</th>
+                    <th>슬롯 ID</th>
+                    <th>방문 시간</th>
+                </tr>
+                </thead>
+                <tbody id="reservationBody">
+                <tr><td colspan="4" class="text-muted text-center">불러오는 중...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<!-- 예약 상세 모달 -->
+<div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reservationModalLabel">예약 상세</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modalReservationId" />
+                <p><strong>가게 ID:</strong> <span id="modalStoreId"></span></p>
+                <p><strong>방문 날짜:</strong> <span id="modalVisitDate"></span></p>
+                <p><strong>슬롯 ID:</strong> <span id="modalSlotId"></span></p>
+                <p><strong>방문 시간:</strong> <span id="modalVisitTime"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="deleteBtn">예약 삭제</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="mt-auto">
+    <div class="container text-center mt-4">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">GrabTable</strong> <span>All Rights Reserved</span></p>
+        <div class="credits">Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a></div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/aos/aos.js"></script>
+<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+
+<script>
+    let userLevel = 'BRONZE';
+
+    window.onload = async function () {
+        await getCsrfToken();
+        const res = await fetch('/api/users', { credentials: 'include' });
+        const data = await res.json();
+
+        if (data.result === 'success') {
+            const user = data.userDto;
+            document.getElementById('username').innerText = `${user.name} 님`;
+
+            await fetchUserLevel();
+            await loadReservationHistory(userLevel);
+
+            // 로그인 상태일 때
+            console.log("로그인 된 상태!");
+            document.querySelector('#loginLink').style.display = 'none';
+            document.querySelector('#registerLink').style.display = 'none';
+            document.querySelector('#reservationLink').style.display = 'inline';
+            document.querySelector('#mypageLink').style.display = 'inline';
+            document.querySelector('#logoutLi').style.display = 'inline';
+
+        } else {
+            alert('로그인이 필요합니다.');
+            location.href = '/login.html';
+        }
+
+        AOS.init();
+    };
+
+    async function getCsrfToken() {
+        const response = await fetch('/csrf-token', { credentials: 'include' });
+        const data = await response.json();
+        document.querySelectorAll('[name="_csrf"]').forEach(el => el.value = data.token);
+    }
+
+    async function fetchUserLevel() {
+        const res = await fetch('/api/users/info', { credentials: 'include' });
+        if (res.ok) {
+            const data = await res.json();
+            userLevel = data.level;
+        }
+    }
+
+    async function loadReservationHistory(level) {
+        const res = await fetch(`/api/${level.toLowerCase()}/reservation/crud/list`, { credentials: 'include' });
+        const data = await res.json();
+        const tbody = document.getElementById('reservationBody');
+        tbody.innerHTML = '';
+
+        if (data.result === 'success') {
+            data.reservationDtoList.forEach(res => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+          <td>${res.storeId}</td>
+          <td>${new Date(res.visitDate).toLocaleDateString()}</td>
+          <td>${res.slotId}</td>
+          <td>${res.slotStartTime}</td>
+        `;
+                row.style.cursor = 'pointer';
+                row.onclick = () => {
+                    document.getElementById('modalReservationId').value = res.reservationId;
+                    document.getElementById('modalStoreId').innerText = res.storeId;
+                    document.getElementById('modalVisitDate').innerText = new Date(res.visitDate).toLocaleDateString();
+                    document.getElementById('modalSlotId').innerText = res.slotId;
+                    document.getElementById('modalVisitTime').innerText = res.slotStartTime;
+                    new bootstrap.Modal(document.getElementById('reservationModal')).show();
+                };
+                tbody.appendChild(row);
+            });
+        } else {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-muted text-center">예약 내역이 없습니다.</td></tr>`;
+        }
+    }
+
+    document.getElementById("deleteBtn").onclick = async function () {
+        const reservationId = document.getElementById("modalReservationId").value;
+        const _csrf = document.getElementById("_csrf").value || document.querySelector('[name="_csrf"]').value;
+        if (!confirm("정말 이 예약을 삭제하시겠습니까?")) return;
+
+        try {
+            const res = await fetch(`/api/${userLevel.toLowerCase()}/reservation/crud/${reservationId}`, {
+                method: "DELETE",
+                headers: {
+                    "X-XSRF-TOKEN": _csrf
+                },
+                credentials: "include"
+            });
+            const data = await res.json();
+
+            if (data.result === "success") {
+                alert("예약이 성공적으로 삭제되었습니다.");
+                location.reload();
+            } else {
+                alert("예약 삭제 실패: " + data.result);
+            }
+        } catch (err) {
+            console.error("삭제 실패:", err);
+            alert("오류로 인해 예약을 삭제하지 못했습니다.");
+        }
+    }
+</script>
+
+<input type="hidden" id="_csrf" name="_csrf" value="" />
+
+</body>
+</html>

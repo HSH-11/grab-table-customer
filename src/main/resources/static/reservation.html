@@ -65,40 +65,13 @@
         }
     }
 
-    // document.getElementById("loadBtn").addEventListener("click", async () => {
-    //     const date = document.getElementById("datePicker").value;
-    //     const storeId = document.getElementById("storeId").value;
-    //
-    //     await fetchUserLevel();
-    //     const url = `/api/${userLevel.toLowerCase()}/reservations/available-times?storeId=${storeId}&date=${date}`;
-    //
-    //     const res = await fetch(url, { credentials: 'include' });
-    //     const times = await res.json();
-    //
-    //     const container = document.getElementById("timeSlots");
-    //     container.innerHTML = "";
-    //
-    //     if (times.length === 0) {
-    //         container.innerHTML = "<p class='text-muted'>예약 가능한 시간이 없습니다.</p>";
-    //         return;
-    //     }
-    //
-    //     times.forEach(time => {
-    //         const btn = document.createElement("button");
-    //         btn.className = "btn btn-orange time-slot";
-    //         btn.textContent = time;
-    //         btn.onclick = () => alert(`${time} 예약 선택됨`);
-    //         container.appendChild(btn);
-    //     });
-    // });
-
     async function loadReservationSlots() {
-        const date = document.getElementById("datePicker").value;
+        const visitDate = document.getElementById("datePicker").value;
         const storeId = document.getElementById("storeId").value;
 
         await fetchUserLevel();
 
-        const url = `/api/${userLevel.toLowerCase()}/reservations/available-times?storeId=${storeId}&date=${date}`;
+        const url = `/api/${userLevel.toLowerCase()}/reservations/available-times?storeId=${storeId}&visitDate=${visitDate}`;
         const res = await fetch(url, { credentials: 'include' });
         const times = await res.json();
 
@@ -111,21 +84,19 @@
         }
 
         times
-            .sort((a, b) => a.startTime.localeCompare(b.startTime))
-            .forEach((slot) => {
-                console.log("슬롯 정보: ", slot);
-                const btn = document.createElement("button");
-                btn.className = "btn m-2";
-                btn.textContent = slot.startTime;
+            .sort((a, b) => a.startTime.localeCompare(b.startTime))  // startTime 기준 오름차순 정렬
+            .forEach((slot, index) => {
+                console.log(visitDate);
+                console.log(slot);
 
-                if (slot.reserved) {
-                    btn.classList.add("btn-secondary"); // 비활성화 스타일
-                    btn.disabled = true;
-                    btn.title = "이미 예약된 시간입니다.";
-                } else {
-                    btn.classList.add("btn-orange");
+                const btn = document.createElement("button");
+                if (slot.reserved === false) {
+                    btn.className = "btn btn-orange m-2";
+                    btn.textContent = slot.startTime;
+
                     btn.onclick = async () => {
-                        const visitDateTime = `${date}T${slot.startTime}`;
+                        const visitDateTime = `${visitDate}T${slot.startTime}`;
+
                         const _csrf = document.getElementById("_csrf").value;
 
                         const reservationDto = {
@@ -143,7 +114,7 @@
                                 "Content-Type": "application/json",
                                 "X-XSRF-TOKEN": _csrf
                             },
-                            body: JSON.stringify(reservationDto),
+                            body: JSON.stringify({ ...reservationDto, _csrf }),
                             credentials: "include"
                         });
 
@@ -154,6 +125,9 @@
                             alert("예약 실패: " + result.result);
                         }
                     };
+                } else {
+                    btn.className = "btn btn-secondary m-2";
+                    btn.textContent = slot.startTime;
                 }
 
                 container.appendChild(btn);
