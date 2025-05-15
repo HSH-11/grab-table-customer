@@ -16,7 +16,7 @@ public interface ReviewService {
 
     ReviewResultDto findByReviewId(Long reviewId);
 
-    ReviewResultDto insertReview(CustomerUserDetails userDetails, Long storeId, Long menuId, ReviewRegisterDto registerDto) throws IOException;
+    ReviewResultDto insertReview(CustomerUserDetails userDetails, Long storeId, Long menuId, Long reservationId, ReviewRegisterDto registerDto) throws IOException;
 
     ReviewResultDto updateReview(CustomerUserDetails userDetails, Long reviewId, ReviewRegisterDto registerDto) throws IOException;
 

@@ -3,6 +3,8 @@ package com.team2.grabtablecustomer.domain.review.service;
 import com.team2.grabtablecustomer.config.CustomerUserDetails;
 import com.team2.grabtablecustomer.domain.menu.entity.Menu;
 import com.team2.grabtablecustomer.domain.menu.repository.MenuRepository;
+import com.team2.grabtablecustomer.domain.reservation.entity.Reservation;
+import com.team2.grabtablecustomer.domain.reservation.repository.ReservationRepository;
 import com.team2.grabtablecustomer.domain.review.dto.ReviewDto;
 import com.team2.grabtablecustomer.domain.review.dto.ReviewRegisterDto;
 import com.team2.grabtablecustomer.domain.review.dto.ReviewResultDto;
@@ -31,6 +33,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final MenuRepository menuRepository;
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
+    private final ReservationRepository reservationRepository;
 
     @Override
     public ReviewResultDto findByStoreId(Long storeId) {
@@ -171,7 +174,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewResultDto insertReview(CustomerUserDetails userDetails, Long storeId, Long menuId, ReviewRegisterDto registerDto) throws IOException {
+    public ReviewResultDto insertReview(CustomerUserDetails userDetails, Long storeId, Long menuId, Long reservationId,ReviewRegisterDto registerDto) throws IOException {
         ReviewResultDto reviewResultDto = new ReviewResultDto();
 
         try {
@@ -185,17 +188,23 @@ public class ReviewServiceImpl implements ReviewService {
             Menu menu = menuRepository.findById(menuId)
                     .orElseThrow(() -> new RuntimeException("Menu not found : " + menuId));
 
-            Review review = Review.builder()
-                    .user(user)
-                    .store(store)
-                    .menu(menu)
-                    .content(registerDto.getContent())
-                    .image(registerDto.getImageFile().getBytes())
-                    .imageContentType(registerDto.getImageFile().getContentType())
-                    .build();
+            Reservation reservation = reservationRepository.findById(reservationId)
+                    .orElseThrow(() -> new RuntimeException("Reservation not found : " + reservationId));
 
-            reviewRepository.save(review);
-            reviewResultDto.setResult("success");
+            if (reservation.getStatus().equals("after")) {
+                Review review = Review.builder()
+                        .user(user)
+                        .store(store)
+                        .menu(menu)
+                        .content(registerDto.getContent())
+                        .image(registerDto.getImageFile().getBytes())
+                        .imageContentType(registerDto.getImageFile().getContentType())
+                        .build();
+                reviewRepository.save(review);
+                reviewResultDto.setResult("success");
+            } else {
+                reviewResultDto.setResult("Owner did not check");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
