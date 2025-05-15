@@ -150,8 +150,11 @@
       reviews.forEach(review => {
         const div = document.createElement("div");
         div.className = "mb-3 border-bottom pb-2";
+
+        const date = new Date(review.createdAt);
+        const formattedDate = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
         div.innerHTML = `
-        <strong>${review.userName}</strong> <small class="text-muted">(${review.createdAt})</small><br>
+        <strong>${review.userName}</strong> <small class="text-muted">(${formattedDate})</small><br>
         <p>${review.content}</p>
       `;
         if (review.image) {
@@ -167,8 +170,6 @@
 
     new bootstrap.Modal(document.getElementById("reviewModal")).show();
   }
-
-
 
   // 이용 가능 시간대 불러오기
   async function loadTimeSlots() {

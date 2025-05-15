@@ -14,6 +14,4 @@ public class ReservationSlotResponseDto {
     private String startTime;
     private String endTime;
     private MembershipLevel allowedMembership;
-
-    private boolean reserved;
 }
