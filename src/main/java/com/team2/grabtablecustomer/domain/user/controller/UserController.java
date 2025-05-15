@@ -32,7 +32,7 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<UserResultDto> insertUser(UserDto userDto) {
         UserResultDto userResultDto = userService.insertUser(userDto);
         return ResponseEntity
