@@ -38,7 +38,7 @@
 <header id="header" class="header position-relative">
     <div class="container-fluid container-xl position-relative">
         <div class="top-row d-flex align-items-center justify-content-between">
-            <a href="index.html" class="logo d-flex align-items-end">
+            <a href="/index" class="logo d-flex align-items-end">
                 <h1 class="sitename">GrabTable</h1>
             </a>
         </div>
@@ -76,25 +76,49 @@
         </div>
     </section>
 
-    <!-- 예약 내역 -->
+    <!-- 다가오는 예약 -->
     <section class="section py-3 mt-3">
         <div class="container">
-            <h3>📅 내 예약 내역</h3>
+            <h3>📅 다가오는 예약</h3>
             <table class="table table-bordered mt-3">
                 <thead>
                 <tr>
                     <th>가게 ID</th>
+                    <th>가게 이름</th>
                     <th>방문 날짜</th>
-                    <th>슬롯 ID</th>
                     <th>방문 시간</th>
+                    <th>방문 여부</th>
                 </tr>
                 </thead>
-                <tbody id="reservationBody">
+                <tbody id="upcomingReservationBody">
                 <tr><td colspan="4" class="text-muted text-center">불러오는 중...</td></tr>
                 </tbody>
             </table>
         </div>
     </section>
+
+    <!-- 지난 예약 및 리뷰 작성 -->
+    <section class="section py-3 mt-3">
+        <div class="container">
+            <h3>📖 지난 예약 및 리뷰 작성</h3>
+            <table class="table table-bordered mt-3">
+                <thead>
+                <tr>
+                    <th>가게 ID</th>
+                    <th>가게 이름</th>
+                    <th>방문 날짜</th>
+                    <th>방문 시간</th>
+                    <th>방문 여부</th>
+                </tr>
+                </thead>
+                <tbody id="pastReservationBody">
+                <tr><td colspan="4" class="text-muted text-center">불러오는 중...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+
 </main>
 
 <!-- 예약 상세 모달 -->
@@ -108,14 +132,31 @@
             <div class="modal-body">
                 <input type="hidden" id="modalReservationId" />
                 <p><strong>가게 ID:</strong> <span id="modalStoreId"></span></p>
+                <p><strong>가게 이름:</strong> <span id="modalStoreName"></span></p>
                 <p><strong>방문 날짜:</strong> <span id="modalVisitDate"></span></p>
-                <p><strong>슬롯 ID:</strong> <span id="modalSlotId"></span></p>
                 <p><strong>방문 시간:</strong> <span id="modalVisitTime"></span></p>
+                <p><strong>방문 여부:</strong> <span id="modalStatus"></span></p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="deleteBtn">예약 삭제</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            <div class="modal-footer flex-column align-items-stretch">
+                <div class="d-flex justify-content-between w-100 mb-2">
+                    <button type="button" class="btn btn-danger" id="modalBtn">모달 버튼</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+
+                <!-- 리뷰 폼이 버튼 아래로 나옴 -->
+                <div id="reviewForm" class="p-3 border rounded bg-light" style="display: none;">
+                    <h5 class="mb-2">✍ 리뷰 작성</h5>
+                    <div class="mb-2">
+                        <textarea id="reviewContent" class="form-control" placeholder="리뷰 내용을 입력하세요" rows="3"></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" id="reviewImage" class="form-control" accept="image/*">
+                    </div>
+                    <button class="btn btn-success" onclick="submitReview()">리뷰 저장</button>
+                </div>
             </div>
+
+
         </div>
     </div>
 </div>
@@ -133,6 +174,7 @@
 
 <script>
     let userLevel = 'BRONZE';
+    let csrfToken = null;
 
     window.onload = async function () {
         await getCsrfToken();
@@ -165,6 +207,7 @@
     async function getCsrfToken() {
         const response = await fetch('/csrf-token', { credentials: 'include' });
         const data = await response.json();
+        csrfToken = data.token;
         document.querySelectorAll('[name="_csrf"]').forEach(el => el.value = data.token);
     }
 
@@ -179,35 +222,85 @@
     async function loadReservationHistory(level) {
         const res = await fetch(`/api/${level.toLowerCase()}/reservation/crud/list`, { credentials: 'include' });
         const data = await res.json();
-        const tbody = document.getElementById('reservationBody');
-        tbody.innerHTML = '';
+
+        const upcomingTbody = document.getElementById('upcomingReservationBody');
+        const pastTbody = document.getElementById('pastReservationBody');
+
+        upcomingTbody.innerHTML = '';
+        pastTbody.innerHTML = '';
 
         if (data.result === 'success') {
-            data.reservationDtoList.forEach(res => {
+            const reservations = data.reservationDtoList;
+
+            const addRow = (res, targetTbody) => {
                 const row = document.createElement('tr');
+                const statusText = res.status === "before" ? "방문 예정" : "방문 완료";
+
                 row.innerHTML = `
-          <td>${res.storeId}</td>
-          <td>${new Date(res.visitDate).toLocaleDateString()}</td>
-          <td>${res.slotId}</td>
-          <td>${res.slotStartTime}</td>
-        `;
+                    <td>${res.storeId}</td>
+                    <td>${res.storeName}</td>
+                    <td>${new Date(res.visitDate).toLocaleDateString()}</td>
+                    <td>${res.slotStartTime}</td>
+                    <td>${statusText}</td>
+                `;
                 row.style.cursor = 'pointer';
                 row.onclick = () => {
                     document.getElementById('modalReservationId').value = res.reservationId;
                     document.getElementById('modalStoreId').innerText = res.storeId;
+                    document.getElementById('modalStoreName').innerText = res.storeName;
                     document.getElementById('modalVisitDate').innerText = new Date(res.visitDate).toLocaleDateString();
-                    document.getElementById('modalSlotId').innerText = res.slotId;
                     document.getElementById('modalVisitTime').innerText = res.slotStartTime;
+                    document.getElementById('modalStatus').innerText = statusText;
+
+                    const modalBtn = document.getElementById('modalBtn');
+
+                    modalBtn.innerHTML = '';
+                    modalBtn.onclick = null;
+
+                    if (res.status === 'before') {
+                        modalBtn.textContent = '예약 삭제';
+                        modalBtn.className = 'btn btn-danger';
+                        modalBtn.onclick = () => deleteReservation();
+                    } else {
+                        modalBtn.textContent = '리뷰 작성';
+                        modalBtn.className = 'btn btn-primary';
+                        modalBtn.onclick = () => writeReview();
+                    }
+
                     new bootstrap.Modal(document.getElementById('reservationModal')).show();
                 };
-                tbody.appendChild(row);
+                targetTbody.appendChild(row);
+            };
+
+            let hasUpcoming = false, hasPast = false;
+
+            reservations.forEach(res => {
+                console.log(res);
+                console.log(res.status);
+                if (res.status === "before") {
+                    addRow(res, upcomingTbody);
+                    hasUpcoming = true;
+                } else if (res.status === "after") {
+                    addRow(res, pastTbody);
+                    hasPast = true;
+                }
             });
+
+            if (!hasUpcoming) {
+                upcomingTbody.innerHTML = `<tr><td colspan="4" class="text-muted text-center">예약된 일정이 없습니다.</td></tr>`;
+            }
+            if (!hasPast) {
+                pastTbody.innerHTML = `<tr><td colspan="4" class="text-muted text-center">지난 예약이 없습니다.</td></tr>`;
+            }
+
         } else {
-            tbody.innerHTML = `<tr><td colspan="4" class="text-muted text-center">예약 내역이 없습니다.</td></tr>`;
+            upcomingTbody.innerHTML = `<tr><td colspan="4" class="text-muted text-center">예약 내역을 불러오지 못했습니다.</td></tr>`;
+            pastTbody.innerHTML = `<tr><td colspan="4" class="text-muted text-center">예약 내역을 불러오지 못했습니다.</td></tr>`;
         }
     }
 
-    document.getElementById("deleteBtn").onclick = async function () {
+
+    async function deleteReservation() {
         const reservationId = document.getElementById("modalReservationId").value;
         const _csrf = document.getElementById("_csrf").value || document.querySelector('[name="_csrf"]').value;
         if (!confirm("정말 이 예약을 삭제하시겠습니까?")) return;
@@ -233,6 +326,55 @@
             alert("오류로 인해 예약을 삭제하지 못했습니다.");
         }
     }
+
+    async function writeReview() {
+        const form = document.getElementById("reviewForm");
+        if (form.style.display === "none") {
+            form.style.display = "block";
+        }
+    }
+
+    async function submitReview() {
+        const storeId = document.getElementById("modalStoreId").innerText;
+        console.log(storeId);
+        const menuId = 7; // 임시. 나중에 실제 예약 데이터에 menuId 포함해야 정확함.
+
+        const content = document.getElementById("reviewContent").value;
+        const imageFile = document.getElementById("reviewImage").files[0];
+
+        if (!content) {
+            alert("리뷰 내용을 입력하세요.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("content", content);
+        if (imageFile) {
+            formData.append("imageFile", imageFile);
+        }
+
+        try {
+            const res = await fetch(`/api/reviews/stores/${storeId}/menus/${menuId}`, {
+                method: "POST",
+                body: formData,
+                credentials: "include",
+                headers: {
+                    "X-XSRF-TOKEN": csrfToken
+                }
+            });
+            const data = await res.json();
+            if (data.result === "success") {
+                alert("리뷰가 성공적으로 등록되었습니다.");
+                location.reload();
+            } else {
+                alert("리뷰 등록 실패: " + data.result);
+            }
+        } catch (err) {
+            console.error("리뷰 등록 중 오류:", err);
+            alert("리뷰 등록 중 오류가 발생했습니다.");
+        }
+    }
+
 </script>
 
 <input type="hidden" id="_csrf" name="_csrf" value="" />
