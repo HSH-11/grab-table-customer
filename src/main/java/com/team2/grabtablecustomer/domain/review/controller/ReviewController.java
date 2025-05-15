@@ -34,7 +34,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.findByUserId(userId));
     }
 
-    @GetMapping("/reviews/{reviewId}")
+    @GetMapping("/{reviewId}")
     public ResponseEntity<ReviewResultDto> findByReviewId(@PathVariable("reviewId") Long reviewId) {
         return ResponseEntity.ok(reviewService.findByReviewId(reviewId));
     }
@@ -48,7 +48,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.insertReview(userDetails, storeId, menuId, registerDto));
     }
 
-    @PutMapping("/reviews/{reviewId}")
+    @PutMapping("/{reviewId}")
     public ResponseEntity<ReviewResultDto> updateReview(
             @AuthenticationPrincipal CustomerUserDetails userDetails,
             @PathVariable("reviewId") Long reviewId,
@@ -56,7 +56,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.updateReview(userDetails, reviewId, registerDto));
     }
 
-    @DeleteMapping("/reviews/{reviewId}")
+    @DeleteMapping("/{reviewId}")
     public ResponseEntity<ReviewResultDto> deleteReview(@AuthenticationPrincipal CustomerUserDetails userDetails, @PathVariable("reviewId") Long reviewId) {
         return ResponseEntity.ok(reviewService.deleteReview(userDetails, reviewId));
     }
