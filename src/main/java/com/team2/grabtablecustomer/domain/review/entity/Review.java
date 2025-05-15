@@ -36,6 +36,7 @@ public class Review {
     Menu menu;
 
     @OneToOne
+    @JoinColumn(name = "reservation_id", unique = true)
     Reservation reservation;
 
     String content;
