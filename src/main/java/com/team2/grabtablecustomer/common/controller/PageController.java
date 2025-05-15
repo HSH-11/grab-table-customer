@@ -26,11 +26,6 @@ public class PageController {
         return "/board.html";
     }
 
-    @GetMapping("/reservation")
-    public String reservation() {
-        return "/reservation.html";
-    }
-
     @GetMapping("/mypage")
     public String mypage() {
         return "/mypage.html";

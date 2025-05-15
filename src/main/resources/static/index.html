@@ -38,7 +38,6 @@
                         <li><a href="/index" class="active">Home</a></li>
                         <li><a href="/register" id="registerLink">Register</a></li>
                         <li><a href="/login" id="loginLink">Login</a></li>
-                        <li><a href="/reservation" id="reservationLink" style="display: none;">Reservation</a></li>
                         <li><a href="/mypage" id="mypageLink" style="display: none;">MyPage</a></li>
                         <li id="logoutLi" style="display: none;">
                             <form id="logoutForm" action="/logout" method="POST" style="margin: 0;">
@@ -61,7 +60,8 @@
 
         <div class="container" data-aos="fade-up" data-aos-delay="100">
             <div class="blog-grid">
-                <article class="blog-item featured" data-aos="fade-up">
+                <article class="blog-item featured" data-aos="fade-up" onclick="location.href='/category?type=양식';"
+                         style="cursor: pointer;">
                     <img src="assets/img/westernfood.jpg" alt="Blog Image" class="img-fluid">
                     <div class="blog-content">
                         <h2 class="post-title">
@@ -70,7 +70,7 @@
                     </div>
                 </article>
 
-                <article class="blog-item" data-aos="fade-up" data-aos-delay="100">
+                <article class="blog-item" data-aos="fade-up" data-aos-delay="100" onclick="location.href='/category?type=한식';" style="cursor: pointer;">
                     <img src="assets/img/KoreanFood.jpg" alt="Blog Image" class="img-fluid">
                     <div class="blog-content">
                         <h3 class="post-title">
@@ -79,7 +79,7 @@
                     </div>
                 </article>
 
-                <article class="blog-item" data-aos="fade-up" data-aos-delay="200">
+                <article class="blog-item" data-aos="fade-up" data-aos-delay="200" onclick="location.href='/category?type=중식';" style="cursor: pointer;">
                     <img src="assets/img/chinensefood.jpg" alt="Blog Image" class="img-fluid">
                     <div class="blog-content">
                         <h3 class="post-title">
@@ -88,7 +88,7 @@
                     </div>
                 </article>
 
-                <article class="blog-item" data-aos="fade-up" data-aos-delay="300">
+                <article class="blog-item" data-aos="fade-up" data-aos-delay="300" onclick="location.href='/category?type=일식';" style="cursor: pointer;">
                     <img src="assets/img/japanensefood.jpeg" alt="Blog Image" class="img-fluid">
                     <div class="blog-content">
                         <h3 class="post-title">
@@ -97,7 +97,7 @@
                     </div>
                 </article>
 
-                <article class="blog-item" data-aos="fade-up" data-aos-delay="400">
+                <article class="blog-item" data-aos="fade-up" data-aos-delay="400" onclick="location.href='/category?type=퓨전';" style="cursor: pointer;">
                     <img src="assets/img/fusion.jpeg" alt="Blog Image" class="img-fluid">
                     <div class="blog-content">
                         <h3 class="post-title">
@@ -157,6 +157,10 @@
                     col.className = 'col-lg-4';
 
                     const article = document.createElement('article');
+                    article.style.cursor = 'pointer';
+                    article.onclick = () => {
+                        window.location.href = `/store-detail?storeId=${store.storeId}`;
+                    };
 
                     const imgDiv = document.createElement('div');
                     imgDiv.className = 'post-img';
@@ -221,12 +225,11 @@
                 console.log("로그인 된 상태!");
                 document.querySelector('#loginLink').style.display = 'none';
                 document.querySelector('#registerLink').style.display = 'none';
-                document.querySelector('#reservationLink').style.display = 'inline';
                 document.querySelector('#mypageLink').style.display = 'inline';
                 document.querySelector('#logoutLi').style.display = 'inline';
             } else if (res.status === 401) {
+                console.log("401 뜸")
                 // 비로그인 상태
-                document.querySelector('#reservationLink').style.display = 'none';
                 document.querySelector('#mypageLink').style.display = 'none';
                 document.querySelector('#logoutLi').style.display = 'none';
             }
