@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,6 +81,7 @@ public class ReviewServiceImpl implements ReviewService {
                 ReviewDto reviewDto = ReviewDto.builder()
                         .reviewId(review.getReviewId())
                         .userId(review.getUser().getUserId())
+                        .userName(review.getUser().getName())
                         .storeId(review.getStore().getStoreId())
                         .menuId(review.getMenu().getMenuId())
                         .content(review.getContent())
@@ -215,7 +217,7 @@ public class ReviewServiceImpl implements ReviewService {
                 review.setContent(registerDto.getContent());
                 review.setImage(registerDto.getImageFile().getBytes());
                 review.setImageContentType(registerDto.getImageFile().getContentType());
-                review.setUpdatedAt(LocalDateTime.now());
+                review.setUpdatedAt(new Date());
 
                 reviewRepository.save(review);
                 reviewResultDto.setResult("success");

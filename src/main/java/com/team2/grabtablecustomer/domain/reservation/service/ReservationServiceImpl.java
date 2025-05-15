@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,7 @@ public class ReservationServiceImpl implements ReservationService {
         } catch (ParseException e) {
             throw new RuntimeException("잘못된 날짜 형식입니다: " + visitDate);
         }
+
 
         return slotRepository.findByStore_StoreId(storeId).stream()
                 .filter(slot -> {

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,7 @@ public class GradeBasedReservationController {
     ) {
 
         // 사용자가 요청한 grade에 따른 가능한 시간대 제공
-        List<ReservationSlotResponseDto> slots = reservationService.getAvailableSlotsByGrade(storeId, grade.toUpperCase(), visitDate);
+        List<ReservationSlotResponseDto> slots = reservationService.getAvailableSlotsByGrade(storeId, grade.toUpperCase(),date);
 
         return ResponseEntity.ok(slots);
     }

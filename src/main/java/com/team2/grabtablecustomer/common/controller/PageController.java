@@ -40,4 +40,14 @@ public class PageController {
     public String customerInfo() {
         return "/customer-info.html";
     }
+  
+    @GetMapping("/store-detail")
+    public String storeDetail() {
+        return "/store-detail.html";
+    }
+  
+    @GetMapping("/category")
+    public String category() {
+        return "/category.html";
+    }
 }

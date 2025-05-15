@@ -23,9 +23,13 @@ public class SecurityConfig {
                         .requestMatchers("/", "/index.html",
                                 "/csrf-token",
                                 "/login", "/login.html",
+                                "/category","/category.html",
+                                "/store-detail","/store-detail.html",
                                 "/register", "/register.html",
                                 "/css/**", "/js/**", "/images/**", "/assets/**", "/fonts/**",
-                                "/debug/**"     // 디버깅, 테스팅용 임시 오픈
+                                "/debug/**",     // 디버깅, 테스팅용 임시 오픈
+                                "/api/menus/**",
+                                "/api/stores/**"
                         ).permitAll()
                         .requestMatchers("/api/gold/**").hasRole("GOLD")
                         .requestMatchers("/api/silver/**").hasAnyRole("GOLD", "SILVER")
