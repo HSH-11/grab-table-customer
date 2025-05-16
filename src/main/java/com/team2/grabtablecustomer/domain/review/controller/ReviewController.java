@@ -39,13 +39,14 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.findByReviewId(reviewId));
     }
 
-    @PostMapping("/stores/{storeId}/menus/{menuId}")
+    @PostMapping("/stores/{storeId}/menus/{menuId}/reservation/{reservationId}")
     public ResponseEntity<ReviewResultDto> insertReview(
             @AuthenticationPrincipal CustomerUserDetails userDetails,
             @PathVariable("storeId") Long storeId,
             @PathVariable("menuId") Long menuId,
+            @PathVariable("reservationId") Long reservationId,
             @ModelAttribute ReviewRegisterDto registerDto) throws IOException {
-        return ResponseEntity.ok(reviewService.insertReview(userDetails, storeId, menuId, registerDto));
+        return ResponseEntity.ok(reviewService.insertReview(userDetails, storeId, menuId, reservationId, registerDto));
     }
 
     @PutMapping("/{reviewId}")
