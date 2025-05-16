@@ -49,16 +49,16 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.insertReview(userDetails, storeId, menuId, reservationId, registerDto));
     }
 
-    @PutMapping("/{reviewId}")
-    public ResponseEntity<ReviewResultDto> updateReview(
-            @AuthenticationPrincipal CustomerUserDetails userDetails,
-            @PathVariable("reviewId") Long reviewId,
-            @ModelAttribute ReviewRegisterDto registerDto) throws IOException {
-        return ResponseEntity.ok(reviewService.updateReview(userDetails, reviewId, registerDto));
-    }
+//    @PutMapping("/{reviewId}")
+//    public ResponseEntity<ReviewResultDto> updateReview(
+//            @AuthenticationPrincipal CustomerUserDetails userDetails,
+//            @PathVariable("reviewId") Long reviewId,
+//            @ModelAttribute ReviewRegisterDto registerDto) throws IOException {
+//        return ResponseEntity.ok(reviewService.updateReview(userDetails, reviewId, registerDto));
+//    }
 
-    @DeleteMapping("/{reviewId}")
-    public ResponseEntity<ReviewResultDto> deleteReview(@AuthenticationPrincipal CustomerUserDetails userDetails, @PathVariable("reviewId") Long reviewId) {
-        return ResponseEntity.ok(reviewService.deleteReview(userDetails, reviewId));
-    }
+//    @DeleteMapping("/{reviewId}")
+//    public ResponseEntity<ReviewResultDto> deleteReview(@AuthenticationPrincipal CustomerUserDetails userDetails, @PathVariable("reviewId") Long reviewId) {
+//        return ResponseEntity.ok(reviewService.deleteReview(userDetails, reviewId));
+//    }
 }

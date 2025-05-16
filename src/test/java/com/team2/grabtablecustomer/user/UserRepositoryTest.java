@@ -1,44 +1,56 @@
 package com.team2.grabtablecustomer.user;
 
+import com.team2.grabtablecustomer.domain.user.entity.Membership;
 import com.team2.grabtablecustomer.domain.user.entity.User;
 import com.team2.grabtablecustomer.domain.user.repository.MembershipRepository;
 import com.team2.grabtablecustomer.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Transactional
-@Rollback
+@Rollback // 테스트 후 DB 롤백됨 (운영 DB에서도 안전)
 class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TestEntityManager entityManager;
+
     @Test
-    void 이메일로_유저_조회() {
-        // given
-        User user = new User();
-        user.setName("테스트");
-        user.setEmail("test@example.com");
-        user.setPassword("암호"); // 인코딩 안 해도 무관
-        user.setMemberships(List.of()); // 비어있어도 됨
+    void testFindByEmail() {
+        Membership membership = new Membership();
+        membership.setName("GOLD");
+        entityManager.persist(membership);
 
-        userRepository.save(user);
+        User user = User.builder()
+                .name("홍길동")
+                .email("user@test.com")
+                .password("1234")
+                .memberships(List.of(membership))
+                .build();
 
-        // when
-        Optional<User> found = userRepository.findByEmail("test@example.com");
+        entityManager.persist(user);
 
-        // then
-        assertTrue(found.isPresent());
-        assertEquals("테스트", found.get().getName());
+        Optional<User> result = userRepository.findByEmail("user@test.com");
+
+        assertTrue(result.isPresent());
+        assertEquals("홍길동", result.get().getName());
+        assertEquals("GOLD", result.get().getMemberships().get(0).getName());
     }
+
 }
+
+

@@ -155,16 +155,16 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
         return reservationResultDto;
     }
 
-    @Override
-    public void testRepo() {
-        Optional<Reservation> res = reservationRepository.findById(1L);
-        if (res.isPresent()) {
-            System.out.println(res);
-            System.out.println(res.get().getReservationId());
-            System.out.println(res.get().getStore().getStoreId());
-            System.out.println(res.get().getVisitDate());
-        } else {
-            System.out.println("not present");
-        }
-    }
+//    @Override
+//    public void testRepo() {
+//        Optional<Reservation> res = reservationRepository.findById(1L);
+//        if (res.isPresent()) {
+//            System.out.println(res);
+//            System.out.println(res.get().getReservationId());
+//            System.out.println(res.get().getStore().getStoreId());
+//            System.out.println(res.get().getVisitDate());
+//        } else {
+//            System.out.println("not present");
+//        }
+//    }
 }

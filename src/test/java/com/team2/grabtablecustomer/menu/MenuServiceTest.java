@@ -4,6 +4,7 @@ import com.team2.grabtablecustomer.domain.menu.dto.MenuImageDto;
 import com.team2.grabtablecustomer.domain.menu.dto.MenuResultDto;
 import com.team2.grabtablecustomer.domain.menu.entity.Menu;
 import com.team2.grabtablecustomer.domain.menu.repository.MenuRepository;
+import com.team2.grabtablecustomer.domain.menu.service.MenuService;
 import com.team2.grabtablecustomer.domain.menu.service.MenuServiceImpl;
 import com.team2.grabtablecustomer.domain.store.entity.Store;
 import com.team2.grabtablecustomer.domain.store.repository.StoreRepository;

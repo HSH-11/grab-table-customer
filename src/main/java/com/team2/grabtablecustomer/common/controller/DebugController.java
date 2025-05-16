@@ -35,9 +35,9 @@ public class DebugController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/repo")
-    public void testRepo() {
-        reservationCRUDService.testRepo();
-    }
+//    @GetMapping("/repo")
+//    public void testRepo() {
+//        reservationCRUDService.testRepo();
+//    }
 
 }
