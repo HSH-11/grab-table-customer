@@ -174,7 +174,7 @@
   // 이용 가능 시간대 불러오기
   async function loadTimeSlots() {
     const date = document.getElementById("modalDate").value;
-    const res = await fetch(`/api/${userLevel.toLowerCase()}/reservations/available-times?storeId=${storeId}&date=${date}`, { credentials: 'include' });
+    const res = await fetch(`/api/${userLevel.toLowerCase()}/reservations/available-times?storeId=${storeId}&visitDate=${date}`, { credentials: 'include' });
     const slots = await res.json();
 
     const container = document.getElementById("modalTimeSlots");

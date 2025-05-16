@@ -21,14 +21,14 @@ public class PageController {
         return "/login.html";
     }
 
+    @GetMapping("/logout")
+    public String logout() {
+        return "/index.html";
+    }
+
     @GetMapping("/board")
     public String board() {
         return "/board.html";
-    }
-
-    @GetMapping("/reservation")
-    public String reservation() {
-        return "/reservation.html";
     }
 
     @GetMapping("/mypage")

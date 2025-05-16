@@ -193,6 +193,7 @@ public class ReviewServiceImpl implements ReviewService {
 
             if (reservation.getStatus().equals("after")) {
                 Review review = Review.builder()
+                        .reservation(reservation)
                         .user(user)
                         .store(store)
                         .menu(menu)
