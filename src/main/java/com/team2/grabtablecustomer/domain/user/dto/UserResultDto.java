@@ -9,8 +9,8 @@ import java.util.List;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserResultDto {
 
     private String result;
