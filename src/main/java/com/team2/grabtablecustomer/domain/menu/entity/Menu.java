@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Menu {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long menuId;
 
     @ManyToOne

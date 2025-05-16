@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class Store {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long storeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
