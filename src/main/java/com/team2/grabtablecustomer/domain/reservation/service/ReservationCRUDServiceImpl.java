@@ -18,9 +18,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +63,7 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
                     .store(store)
                     .reservationSlot(slot)
                     .visitDate(visitDate)
+                    .status("before")
                     .build();
 
             reservationRepository.save(reservation);
@@ -92,7 +90,7 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
                 return reservationResultDto;
             }
 
-            List<Reservation> reservationList = reservationRepository.findWithSlotByUserEmail(email);
+            List<Reservation> reservationList = reservationRepository.findWithSlotAndStoreByUserEmail(email);
 
             if (reservationList.isEmpty()) {
                 reservationResultDto.setResult("no reservation");
@@ -103,6 +101,7 @@ public class ReservationCRUDServiceImpl implements ReservationCRUDService {
                     .map(res -> ReservationDto.builder()
                             .reservationId(res.getReservationId())
                             .storeId(res.getStore().getStoreId())
+                            .storeName(res.getStore().getName())
                             .visitDate(res.getVisitDate().toString())
                             .slotId(res.getReservationSlot().getSlotId())
                             .slotStartTime(res.getReservationSlot().getStartTime())
