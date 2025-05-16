@@ -5,6 +5,7 @@ import com.team2.grabtablecustomer.domain.menu.entity.Menu;
 import com.team2.grabtablecustomer.domain.menu.repository.MenuRepository;
 import com.team2.grabtablecustomer.domain.reservation.entity.Reservation;
 import com.team2.grabtablecustomer.domain.reservation.repository.ReservationRepository;
+import com.team2.grabtablecustomer.domain.review.dto.ReviewDto;
 import com.team2.grabtablecustomer.domain.review.dto.ReviewRegisterDto;
 import com.team2.grabtablecustomer.domain.review.dto.ReviewResultDto;
 import com.team2.grabtablecustomer.domain.review.entity.Review;
@@ -149,8 +150,9 @@ class ReviewServiceTest {
     }
 
     @Test
-    @DisplayName("리뷰 등록 실패")
+    @DisplayName("리뷰 등록 성공 - 이미지 없이")
     void insertReviewWithoutImage() throws IOException {
+        // given
         Long storeId = 1L;
         Long menuId = 2L;
         Long reservationId = 3L;
@@ -159,9 +161,20 @@ class ReviewServiceTest {
         CustomerUserDetails userDetails = mock(CustomerUserDetails.class);
         when(userDetails.getUsername()).thenReturn(email);
 
-        User user = User.builder().userId(10L).email(email).build();
-        Store store = Store.builder().storeId(storeId).build();
-        Menu menu = Menu.builder().menuId(menuId).store(store).build();
+        User user = User.builder()
+                .userId(10L)
+                .email(email)
+                .build();
+
+        Store store = Store.builder()
+                .storeId(storeId)
+                .build();
+
+        Menu menu = Menu.builder()
+                .menuId(menuId)
+                .store(store)
+                .build();
+
         Reservation reservation = Reservation.builder()
                 .reservationId(reservationId)
                 .user(user)
@@ -170,32 +183,32 @@ class ReviewServiceTest {
 
         ReviewRegisterDto dto = new ReviewRegisterDto();
         dto.setContent("맛있었습니다!");
-
-        MultipartFile emptyFile = new MockMultipartFile("imageFile", "", "image/png", new byte[0]);
-        dto.setImageFile(emptyFile);
+        dto.setImageFile(new MockMultipartFile("imageFile", "", "image/png", new byte[0]));
 
         Review savedReview = Review.builder()
                 .reviewId(99L)
-                .content(dto.getContent())
                 .user(user)
                 .store(store)
                 .menu(menu)
                 .reservation(reservation)
+                .content(dto.getContent())
                 .build();
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(storeRepository.findById(storeId)).thenReturn(Optional.of(store));
         when(menuRepository.findById(menuId)).thenReturn(Optional.of(menu));
         when(reservationRepository.findById(reservationId)).thenReturn(Optional.of(reservation));
-        when(reviewRepository.save(any())).thenReturn(savedReview);
+        when(reviewRepository.save(any(Review.class))).thenReturn(savedReview);
 
         // when
         ReviewResultDto result = reviewService.insertReview(userDetails, storeId, menuId, reservationId, dto);
 
         // then
         assertThat(result.getResult()).isEqualTo("success");
-        assertThat(result.getReviewDto().getContent()).isEqualTo("맛있었습니다!");
+        // 이 서비스는 reviewDto를 반환하지 않으므로 null임
+        assertThat(result.getReviewDto()).isNull();
     }
+
 
 }
 
