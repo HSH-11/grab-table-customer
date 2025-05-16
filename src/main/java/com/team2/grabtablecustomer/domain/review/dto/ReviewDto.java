@@ -16,7 +16,7 @@ public class ReviewDto {
     private Long storeId;
     private Long menuId;
     // todo : 예약 연결
-//    private Long reservationId;
+    private Long reservationId;
     private String content;
     private Date createdAt;
     private Date updatedAt;
