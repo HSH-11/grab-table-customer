@@ -215,56 +215,56 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewResultDto;
     }
 
-    @Override
-    public ReviewResultDto updateReview(CustomerUserDetails userDetails, Long reviewId, ReviewRegisterDto registerDto) throws IOException {
-        ReviewResultDto reviewResultDto = new ReviewResultDto();
-
-        try {
-            Review review = reviewRepository.findById(reviewId)
-                    .orElseThrow(() -> new RuntimeException("Review not found : " + reviewId));
-
-            if (review.getUser().getEmail().equals(userDetails.getUsername())) {
-                review.setContent(registerDto.getContent());
-                review.setImage(registerDto.getImageFile().getBytes());
-                review.setImageContentType(registerDto.getImageFile().getContentType());
-                review.setUpdatedAt(new Date());
-
-                reviewRepository.save(review);
-                reviewResultDto.setResult("success");
-
-            } else {
-                reviewResultDto.setResult("no permission : " + reviewId);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            reviewResultDto.setResult("fail");
-        }
-
-        return reviewResultDto;
-    }
-
-    @Override
-    public ReviewResultDto deleteReview(CustomerUserDetails userDetails, Long reviewId) {
-        ReviewResultDto reviewResultDto = new ReviewResultDto();
-
-        try {
-            Review review = reviewRepository.findById(reviewId)
-                    .orElseThrow(() -> new RuntimeException("Review not found : " + reviewId));
-
-            if (review.getUser().getEmail().equals(userDetails.getUsername())) {
-                reviewRepository.delete(review);
-                reviewResultDto.setResult("success");
-
-            } else {
-                reviewResultDto.setResult("no permission : " + reviewId);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            reviewResultDto.setResult("fail");
-        }
-
-        return reviewResultDto;
-    }
+//    @Override
+//    public ReviewResultDto updateReview(CustomerUserDetails userDetails, Long reviewId, ReviewRegisterDto registerDto) throws IOException {
+//        ReviewResultDto reviewResultDto = new ReviewResultDto();
+//
+//        try {
+//            Review review = reviewRepository.findById(reviewId)
+//                    .orElseThrow(() -> new RuntimeException("Review not found : " + reviewId));
+//
+//            if (review.getUser().getEmail().equals(userDetails.getUsername())) {
+//                review.setContent(registerDto.getContent());
+//                review.setImage(registerDto.getImageFile().getBytes());
+//                review.setImageContentType(registerDto.getImageFile().getContentType());
+//                review.setUpdatedAt(new Date());
+//
+//                reviewRepository.save(review);
+//                reviewResultDto.setResult("success");
+//
+//            } else {
+//                reviewResultDto.setResult("no permission : " + reviewId);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            reviewResultDto.setResult("fail");
+//        }
+//
+//        return reviewResultDto;
+//    }
+//
+//    @Override
+//    public ReviewResultDto deleteReview(CustomerUserDetails userDetails, Long reviewId) {
+//        ReviewResultDto reviewResultDto = new ReviewResultDto();
+//
+//        try {
+//            Review review = reviewRepository.findById(reviewId)
+//                    .orElseThrow(() -> new RuntimeException("Review not found : " + reviewId));
+//
+//            if (review.getUser().getEmail().equals(userDetails.getUsername())) {
+//                reviewRepository.delete(review);
+//                reviewResultDto.setResult("success");
+//
+//            } else {
+//                reviewResultDto.setResult("no permission : " + reviewId);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            reviewResultDto.setResult("fail");
+//        }
+//
+//        return reviewResultDto;
+//    }
 }

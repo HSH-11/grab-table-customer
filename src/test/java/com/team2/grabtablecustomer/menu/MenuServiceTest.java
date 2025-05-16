@@ -4,7 +4,7 @@ import com.team2.grabtablecustomer.domain.menu.dto.MenuImageDto;
 import com.team2.grabtablecustomer.domain.menu.dto.MenuResultDto;
 import com.team2.grabtablecustomer.domain.menu.entity.Menu;
 import com.team2.grabtablecustomer.domain.menu.repository.MenuRepository;
-import com.team2.grabtablecustomer.domain.menu.service.MenuServiceImpl;
+import com.team2.grabtablecustomer.domain.menu.service.MenuService;
 import com.team2.grabtablecustomer.domain.store.entity.Store;
 import com.team2.grabtablecustomer.domain.store.repository.StoreRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +32,7 @@ class MenuServiceTest {
     private MenuRepository menuRepository;
 
     @InjectMocks
-    private MenuServiceImpl menuService;
+    private MenuService menuService;
 
     @Test
     @DisplayName("가게 ID로 메뉴 리스트 조회 성공")
