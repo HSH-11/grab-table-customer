@@ -22,7 +22,7 @@ public class StoreController {
         return ResponseEntity.status(200).body(storeService.findAll());
     }
 
-    @GetMapping("/{searchType}")
+    @GetMapping("/type/{searchType}")
     public ResponseEntity<StoreResultDto> findByType(@PathVariable String searchType) {
         return ResponseEntity.status(200).body(storeService.findByType(searchType));
     }

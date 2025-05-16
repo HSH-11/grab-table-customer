@@ -86,7 +86,7 @@
     const title = document.getElementById('categoryTitle');
     title.textContent = `식당 목록`;
 
-    fetch(`/api/stores/${type}`)
+    fetch(`/api/stores/type/${type}`)
             .then(res => res.json())
             .then(data => {
               const stores = data.storeDtoList || [];
