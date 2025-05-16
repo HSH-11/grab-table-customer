@@ -18,8 +18,8 @@ public interface ReviewService {
 
     ReviewResultDto insertReview(CustomerUserDetails userDetails, Long storeId, Long menuId, Long reservationId, ReviewRegisterDto registerDto) throws IOException;
 
-    ReviewResultDto updateReview(CustomerUserDetails userDetails, Long reviewId, ReviewRegisterDto registerDto) throws IOException;
-
-    ReviewResultDto deleteReview(CustomerUserDetails userDetails, Long reviewId);
+//    ReviewResultDto updateReview(CustomerUserDetails userDetails, Long reviewId, ReviewRegisterDto registerDto) throws IOException;
+//
+//    ReviewResultDto deleteReview(CustomerUserDetails userDetails, Long reviewId);
 
 }

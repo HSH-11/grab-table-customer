@@ -1,6 +1,5 @@
 package com.team2.grabtablecustomer.store;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team2.grabtablecustomer.config.MyAuthenticationFailureHandler;
 import com.team2.grabtablecustomer.config.MyAuthenticationSuccessHandler;
 import com.team2.grabtablecustomer.config.SecurityConfig;

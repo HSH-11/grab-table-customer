@@ -51,11 +51,10 @@
                     <li><a href="/index">Home</a></li>
                     <li><a href="/register" id="registerLink">Register</a></li>
                     <li><a href="/login" id="loginLink">Login</a></li>
-                    <li><a href="/reservation" id="reservationLink" style="display: none;">Reservation</a></li>
                     <li><a href="/mypage" id="mypageLink" class="active" style="display: none;">MyPage</a></li>
                     <li id="logoutLi" style="display: none;">
                         <form id="logoutForm" action="/logout" method="POST" style="margin: 0;">
-<!--                            <input type="hidden" name="_csrf" id="_csrf" />-->
+                            <input type="hidden" name="_csrf" id="_csrf" />
                             <button type="submit" style="background: none; border: none; color: #000; cursor: pointer;">
                                 Logout
                             </button>
@@ -201,7 +200,6 @@
             console.log("로그인 된 상태!");
             document.querySelector('#loginLink').style.display = 'none';
             document.querySelector('#registerLink').style.display = 'none';
-            document.querySelector('#reservationLink').style.display = 'inline';
             document.querySelector('#mypageLink').style.display = 'inline';
             document.querySelector('#logoutLi').style.display = 'inline';
 
@@ -416,8 +414,6 @@
     }
 
 </script>
-
-<input type="hidden" id="_csrf" name="_csrf" value="" />
 
 </body>
 </html>

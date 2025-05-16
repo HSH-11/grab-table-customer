@@ -50,20 +50,20 @@ public class UserController {
     }
 
     // 사용자 권한을 우선 순위를 만들어서 실버인 사용자가 DB에 같이 브론즈로 저장되어 있던 걸 건너뛰게끔 하였다.
-    private static final List<String> LEVEL_PRIORITY = List.of("BRONZE", "SILVER", "GOLD");
+//    private static final List<String> LEVEL_PRIORITY = List.of("BRONZE", "SILVER", "GOLD");
 
-    @GetMapping("/info")
-    public ResponseEntity<UserInfoDto> getUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
-        String email = userDetails.getUsername();
-        String level = userRepository.findByEmail(email)
-                .orElseThrow()
-                .getMemberships()
-                .stream()
-                .map(m -> m.getName())
-                .max(Comparator.comparingInt(levelName -> LEVEL_PRIORITY.indexOf(levelName)))
-                .orElse("BRONZE");
-
-        return ResponseEntity.ok(new UserInfoDto(email, level));
-    }
+//    @GetMapping("/info")
+//    public ResponseEntity<UserInfoDto> getUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
+//        String email = userDetails.getUsername();
+//        String level = userRepository.findByEmail(email)
+//                .orElseThrow()
+//                .getMemberships()
+//                .stream()
+//                .map(m -> m.getName())
+//                .max(Comparator.comparingInt(levelName -> LEVEL_PRIORITY.indexOf(levelName)))
+//                .orElse("BRONZE");
+//
+//        return ResponseEntity.ok(new UserInfoDto(email, level));
+//    }
 
 }
